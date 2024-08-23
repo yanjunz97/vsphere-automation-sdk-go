@@ -103,9 +103,6 @@ const Certificates_APPLYCERTIFICATE_SERVICE_TYPE_CBM_CLUSTER_MANAGER = "CBM_CLUS
 const Certificates_APPLYCERTIFICATE_SERVICE_TYPE_CBM_CORFU = "CBM_CORFU"
 
 // Possible value for ``serviceType`` of method Certificates#applycertificate.
-const Certificates_APPLYCERTIFICATE_SERVICE_TYPE_CBM_SITE_PROXY_CLIENT = "CBM_SITE_PROXY_CLIENT"
-
-// Possible value for ``serviceType`` of method Certificates#applycertificate.
 const Certificates_APPLYCERTIFICATE_SERVICE_TYPE_COMPUTE_MANAGER = "COMPUTE_MANAGER"
 
 // Possible value for ``serviceType`` of method Certificates#applycertificate.

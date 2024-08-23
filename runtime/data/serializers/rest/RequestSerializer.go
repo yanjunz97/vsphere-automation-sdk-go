@@ -122,15 +122,28 @@ func SerializeRequestsWithSecCtxSerializers(inputValue *data.StructValue, execCt
 
 func createParamsFieldMap(inputValue *data.StructValue, fieldsMapBindingtype map[string]bindings.BindingType, fieldNamesMap map[string]string) (map[string][]string, error) {
 	fields := map[string][]string{}
+	dataValueToJSONEncoder := cleanjson.NewDataValueToJsonEncoder()
 	for field, fieldName := range fieldNamesMap {
 		val, err := getNestedParams(field, inputValue, fieldsMapBindingtype)
 		if err != nil {
 			log.Debugf("Error in request serialization: %s ", err.Error())
 			return nil, err
 		}
-		fields, err = replaceFieldValue(fields, fieldName, val)
-		if err != nil {
-			return nil, err
+		if reflect.TypeOf(val) == data.ListValuePtr {
+			temp := []string{}
+			for _, e := range val.(*data.ListValue).List() {
+				elem, err := unquote(dataValueToJSONEncoder.Encode(e))
+				if err != nil {
+					return nil, err
+				}
+				temp = append(temp, elem)
+			}
+			fields[fieldName] = temp
+		} else {
+			fields, err = replaceFieldValue(fields, fieldName, val)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	return fields, nil
@@ -259,34 +272,13 @@ func queryEscapeDispatchParams(dispatchParamsStr string, queryFields map[string]
 }
 
 func replaceFieldValue(fields map[string][]string, fieldName string, fieldValue data.DataValue) (map[string][]string, error) {
-	if optionalValue, ok := fieldValue.(*data.OptionalValue); ok {
-		if optionalValue.IsSet() {
-			_, err := replaceFieldValue(fields, fieldName, optionalValue.Value())
-			if err != nil {
-				return nil, err
-			}
-		}
-		return fields, nil
+	fieldStr, err := convertDataValueToString(fieldValue)
+	if err != nil {
+		return nil, err
 	}
-
-	if listValue, ok := fieldValue.(*data.ListValue); ok {
-		serializedListValues := []string{}
-		for _, e := range listValue.List() {
-			elem, err := convertDataValueToString(e)
-			if err != nil {
-				return nil, err
-			}
-			serializedListValues = append(serializedListValues, elem)
-		}
-		fields[fieldName] = serializedListValues
-	} else {
-		fieldStr, err := convertDataValueToString(fieldValue)
-		if err != nil {
-			return nil, err
-		}
+	if fieldStr != "" {
 		fields[fieldName] = []string{fieldStr}
 	}
-
 	return fields, nil
 }
 
@@ -294,6 +286,12 @@ func replaceFieldValue(fields map[string][]string, fieldName string, fieldValue 
 func convertDataValueToString(dataValue data.DataValue) (string, error) {
 	dataValueToJSONEncoder := cleanjson.NewDataValueToJsonEncoder()
 	switch reflect.TypeOf(dataValue) {
+	case data.OptionalValuePtr:
+		optionalVal := dataValue.(*data.OptionalValue)
+		if optionalVal.IsSet() {
+			return convertDataValueToString(optionalVal.Value())
+		}
+		return "", nil
 	case data.BoolValuePtr:
 		return dataValueToJSONEncoder.Encode(dataValue)
 	case data.StringValuePtr:

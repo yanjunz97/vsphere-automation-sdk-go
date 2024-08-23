@@ -1,4 +1,5 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright (c) 2019-2024 Broadcom. All Rights Reserved.
+// The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -20,7 +21,7 @@ const _ = vapiCore_.SupportedByRuntimeVersion2
 
 type UserCredentialClient interface {
 
-	// Use this API to create service user object credential in ALB controller clutser
+	// Use this API to create service user object credential in ALB controller clutser. This API is for VCF deployments only.
 	//
 	// @param aLBControllerUserCredentialParam (required)
 	// @return com.vmware.nsx_policy.model.ALBControllerUserCredentialResponse
@@ -32,7 +33,7 @@ type UserCredentialClient interface {
 	// @throws NotFound  Not Found
 	Create(aLBControllerUserCredentialParam nsx_policyModel.ALBControllerUserCredential) (nsx_policyModel.ALBControllerUserCredentialResponse, error)
 
-	// Use this API to update admin user password or service user object password in ALB controller.
+	// Use this API to update admin user password or service user object password in ALB controller. This API is for VCF deployments only.
 	//
 	// @param aLBControllerUserCredentialParam (required)
 	// @param runningConfigParam Update Advanced Load Balancer Controller runtime config as well (optional)

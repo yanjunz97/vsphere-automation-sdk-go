@@ -11,51 +11,51 @@
 package clusters
 
 import (
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
-	vapiProtocol_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/data"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
 	"github.com/vmware/vsphere-automation-sdk-go/services/vmc/autoscaler/model"
 	"reflect"
 )
 
-func remediationPolicyGetInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func remediationPolicyGetInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func RemediationPolicyGetOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(model.RemediationClusterInfoBindingType)
+func remediationPolicyGetOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.RemediationClusterInfoBindingType)
 }
 
-func remediationPolicyGetRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func remediationPolicyGetRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
 	pathParams["cluster"] = "cluster"
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
@@ -63,7 +63,7 @@ func remediationPolicyGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,
@@ -84,49 +84,49 @@ func remediationPolicyGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 		map[string]int{"com.vmware.vapi.std.errors.unauthenticated": 401, "com.vmware.vapi.std.errors.invalid_request": 400, "com.vmware.vapi.std.errors.unauthorized": 403})
 }
 
-func remediationPolicyPatchInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func remediationPolicyPatchInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
-	fields["remediation_policy_patch"] = vapiBindings_.NewReferenceType(model.RemediationPolicyPatchBindingType)
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
+	fields["remediation_policy_patch"] = bindings.NewReferenceType(model.RemediationPolicyPatchBindingType)
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
 	fieldNameMap["remediation_policy_patch"] = "RemediationPolicyPatch"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func RemediationPolicyPatchOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(model.TaskBindingType)
+func remediationPolicyPatchOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.TaskBindingType)
 }
 
-func remediationPolicyPatchRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func remediationPolicyPatchRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
-	fields["remediation_policy_patch"] = vapiBindings_.NewReferenceType(model.RemediationPolicyPatchBindingType)
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
+	fields["remediation_policy_patch"] = bindings.NewReferenceType(model.RemediationPolicyPatchBindingType)
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
 	fieldNameMap["remediation_policy_patch"] = "RemediationPolicyPatch"
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["remediation_policy_patch"] = vapiBindings_.NewReferenceType(model.RemediationPolicyPatchBindingType)
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["remediation_policy_patch"] = bindings.NewReferenceType(model.RemediationPolicyPatchBindingType)
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
 	pathParams["cluster"] = "cluster"
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
@@ -134,7 +134,7 @@ func remediationPolicyPatchRestMetadata() vapiProtocol_.OperationRestMetadata {
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,

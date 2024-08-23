@@ -23,14 +23,14 @@ type AbstractEntity struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 }
@@ -382,14 +382,14 @@ type AwsCustomerConnectedAccount struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id             string
 	PolicyPayerArn *string
@@ -429,24 +429,15 @@ func (s *AwsCustomerConnectedAccount) GetDataValue__() (vapiData_.DataValue, []e
 }
 
 type AwsEsxHost struct {
-	// name of the selected capacity pool for the instance.
-	CapacityPool *string
-	EniList      []EniInfo
-	XeniInfo     *XEniInfo
+	EniList              []EniInfo
+	InternalPublicIpPool []SddcPublicIp
+	XeniInfo             *XEniInfo
 	// Partition number alloted to host. format: int32
 	PartitionNumber *int64
-	// the number of continuous times the host has been in an EC2 RUNNING state. format: int32
-	Ec2InstanceRunningStatusCount *int64
-	// Nic info in the user data for each host.
-	EsxNicInfo           *EsxNicInfo
-	InternalPublicIpPool []SddcPublicIp
+	Name            *string
 	// Availability zone where the host is provisioned.
 	AvailabilityZone *string
 	EsxId            *string
-	DurableHostName  *string
-	StateLastUpdated *time.Time
-	Name             *string
-	CustomProperties map[string]string
 	Hostname         *string
 	Provider         string
 	// Backing cloud provider instance type for host.
@@ -464,7 +455,8 @@ type AwsEsxHost struct {
 	// * EsxHost#EsxHost_ESX_STATE_ADDING_TO_VCENTER
 	// * EsxHost#EsxHost_ESX_STATE_DELETING_FROM_VCENTER
 	// * EsxHost#EsxHost_ESX_STATE_PENDING_CLOUD_DELETION
-	EsxState *string
+	EsxState         *string
+	CustomProperties map[string]string
 }
 
 // Identifier denoting this class, when it is used in polymorphic context.
@@ -491,7 +483,7 @@ type AwsKeyPair struct {
 	KeyName        *string
 	KeyFingerprint *string
 	KeyMaterial    *string
-	Tags           []Tag
+	Tags           []string
 }
 
 func (s *AwsKeyPair) GetType__() vapiBindings_.BindingType {
@@ -531,12 +523,20 @@ func (s *AwsKmsInfo) GetDataValue__() (vapiData_.DataValue, []error) {
 
 type AwsSddcConfig struct {
 	ExistingVpcId *string
+	Region        string
 	// Indicates the desired licensing support, if any, of Microsoft software.
 	MsftLicenseConfig *MsftLicensingConfig
-	// The account linking configuration, we will keep this one and remove accountLinkSddcConfig finally.
-	AccountLinkConfig *AccountLinkConfig
 	// AWS VPC IP range. Only prefix of 16 or 20 is currently supported.
 	VpcCidr *string
+	// Possible values are:
+	//
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_R5_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3EN_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I4I_METAL
+	//
+	//  The instance type for the esx hosts in the primary cluster of the SDDC.
+	HostInstanceType *string
 	// skip creating vxlan for compute gateway for SDDC provisioning
 	SkipCreatingVxlan *bool
 	// VXLAN IP subnet in CIDR for compute gateway
@@ -557,35 +557,13 @@ type AwsSddcConfig struct {
 	Name            string
 	// A list of the SDDC linking configurations to use.
 	AccountLinkSddcConfig []AccountLinkSddcConfig
-	// Possible values are:
-	//
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_R5_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3EN_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I4I_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_C6I_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_48XL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_24XL
-	//
-	//  The instance type for the esx hosts in the primary cluster of the SDDC.
-	HostInstanceType *string
-	// Identifier of the billing account in subscription.
-	BillingAccountId *string
-	Region           *string
 	// If provided, will be assigned as SDDC id of the provisioned SDDC. format: UUID
-	SddcId *string
-	// If provided, configuration from the template will applied to the provisioned SDDC. format: UUID
-	SddcTemplateId *string
+	SddcId   *string
+	NumHosts int64
 	// Denotes the sddc type , if the value is null or empty, the type is considered as default.
 	SddcType *string
-	// Possible values are:
-	//
-	// * SddcConfig#SddcConfig_VSAN_VERSION_VSAN1
-	// * SddcConfig#SddcConfig_VSAN_VERSION_VSANESA
-	// * SddcConfig#SddcConfig_VSAN_VERSION_NOVSAN
-	//
-	//  The vSAN version to be used in the SDDC's primary cluster.
-	VsanVersion *string
+	// The account linking configuration, we will keep this one and remove accountLinkSddcConfig finally.
+	AccountLinkConfig *AccountLinkConfig
 	// Possible values are:
 	//
 	// * SddcConfig#SddcConfig_PROVIDER_AWS
@@ -595,7 +573,8 @@ type AwsSddcConfig struct {
 	Provider string
 	// The SSO domain name to use for vSphere users. If not specified, vmc.local will be used.
 	SsoDomain *string
-	NumHosts  int64
+	// If provided, configuration from the template will applied to the provisioned SDDC. format: UUID
+	SddcTemplateId *string
 	// Possible values are:
 	//
 	// * SddcConfig#SddcConfig_DEPLOYMENT_TYPE_SINGLEAZ
@@ -630,14 +609,14 @@ type AwsSddcConnection struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 	// The CIDR block of the customer's subnet this link is in.
@@ -713,72 +692,65 @@ type AwsSddcResourceConfig struct {
 	VcIp *string
 	// Name for management appliance network.
 	MgmtApplianceNetworkName *string
+	// Management Gateway Id
+	MgwId *string
 	// URL of the NSX Manager
 	NsxMgrUrl *string
-	// This flag determines whether vLCM is enabled on this sddc or not.
-	VlcmEnabled *bool
-	// NSX cloud audit Password
-	NsxCloudAuditPassword *string
+	// skip creating vxlan for compute gateway for SDDC provisioning
+	SkipCreatingVxlan *bool
+	// ESX host subnet
+	EsxHostSubnet *string
 	// vCenter to csp federation status.
 	VcCspLoginStatus *string
-	// NSX cloud admin password
-	NsxCloudAdminPassword *string
 	// The ManagedObjectReference of the management Datastore
 	ManagementDs *string
 	// nsx api entire base url
 	NsxApiPublicEndpointUrl *string
 	// Nfs Mode Flag, for nfs mounting.
-	NfsMode *bool
-	// Password for vCenter SDDC administrator
-	CloudPassword *string
-	SddcNetworks  []string
+	NfsMode      *bool
+	SddcNetworks []string
 	// List of clusters in the SDDC.
 	Clusters []Cluster
-	// Username for vCenter SDDC administrator
-	CloudUsername *string
 	// Possible values are:
 	//
 	// * SddcResourceConfig#SddcResourceConfig_DEPLOYMENT_TYPE_SINGLE_AZ
 	// * SddcResourceConfig#SddcResourceConfig_DEPLOYMENT_TYPE_MULTI_AZ
 	//
 	//  Denotes if this is a SingleAZ SDDC or a MultiAZ SDDC.
-	DeploymentType         *string
-	PopAgentXeniConnection *PopAgentXeniConnection
+	DeploymentType *string
 	// NSX Manager internal management IP
 	NsxMgrManagementIp *string
 	// NSX cloud audit user name
 	NsxCloudAudit *string
 	// Cluster Id to add ESX workflow
 	EsxClusterId *string
-	// Management Gateway Id
-	MgwId *string
+	// vCenter public IP
+	VcPublicIp *string
 	// URL of the vCenter server
 	VcUrl    *string
 	EsxHosts []AwsEsxHost
-	// Group name for vCenter SDDC administrator
-	CloudUserGroup *string
+	// vCenter internal management IP
+	VcManagementIp *string
 	ManagementRp   *string
 	// Availability zone where the witness node is provisioned for a MultiAZ SDDC. This is null for a SingleAZ SDDC.
 	WitnessAvailabilityZone *string
 	// Whether this sddc is maintained by its desired state documents.
 	SddcDesiredState *bool
 	SddcSize         *SddcSize
-	// This flag determines whether CVDS is enabled on this sddc or not.
-	CvdsEnabled *bool
+	// NSX-T Native Oauth client for UI.
+	NsxNativeClient *CspOauthClient
 	// List of Controller IPs
 	NsxControllerIps []string
 	// Marks that the SDDC VC should be deployed with two hostnames.
 	TwoHostnameVcDeployment *bool
-	// ESX host subnet
-	EsxHostSubnet *string
 	// The SSO domain name to use for vSphere users
 	SsoDomain *string
+	// The Microsoft license status of this SDDC.
+	MsftLicenseConfig *MsftLicensingConfig
 	// region in which sddc is deployed
 	Region *string
-	// if true, use the private IP addresses to register DNS records for the management VMs
-	DnsWithManagementVmPrivateIp *bool
-	// vCenter public IP
-	VcPublicIp *string
+	// Outpost configuration of this SDDC.
+	OutpostConfig *OutpostConfig
 	// (deprecated)
 	PscIp *string
 	// if true, NSX-T UI is enabled.
@@ -795,6 +767,10 @@ type AwsSddcResourceConfig struct {
 	// Mark if Containerized Permissions has been enabled on vCenter.
 	VcContainerizedPermissionsEnabled *bool
 	CustomProperties                  map[string]string
+	// NSX cloud audit Password
+	NsxCloudAuditPassword *string
+	// Password for vCenter SDDC administrator
+	CloudPassword *string
 	// Possible values are:
 	//
 	// * SddcResourceConfig#SddcResourceConfig_PROVIDER_AWS
@@ -802,30 +778,31 @@ type AwsSddcResourceConfig struct {
 	//
 	//  Discriminator for additional properties
 	Provider string
-	// vCenter internal management IP
-	VcManagementIp *string
-	// The Microsoft license status of this SDDC.
-	MsftLicenseConfig *MsftLicensingConfig
-	// NSX-T Native Oauth client for UI.
-	NsxNativeClient *CspOauthClient
+	// NSX cloud admin password
+	NsxCloudAdminPassword *string
+	// Username for vCenter SDDC administrator
+	CloudUsername *string
+	// This flag determines whether CVDS is enabled on this sddc or not.
+	CvdsEnabled *bool
 	// unique id of the vCenter server
 	VcInstanceId *string
-	// oAuth client for enabling federation on vCenter.
-	VcOauthClient *CspOauthClient
-	// skip creating vxlan for compute gateway for SDDC provisioning
-	SkipCreatingVxlan *bool
-	SddcManifest      *SddcManifest
+	// Group name for vCenter SDDC administrator
+	CloudUserGroup *string
+	// This flag determines whether vLCM is enabled on this sddc or not.
+	VlcmEnabled  *bool
+	SddcManifest *SddcManifest
 	// VXLAN IP subnet
 	VxlanSubnet  *string
 	SddcSecurity *SddcSecurity
 	// sddc identifier
-	SddcId *string
-	// Outpost configuration of this SDDC.
-	OutpostConfig *OutpostConfig
+	SddcId                 *string
+	PopAgentXeniConnection *PopAgentXeniConnection
 	// URL of the NSX Manager UI login for local user access
 	NsxMgrLoginUrl *string
 	// Break-glass URL for non-federated login.
 	VcBreakGlassUrl *string
+	// if true, use the private IP addresses to register DNS records for the management VMs
+	DnsWithManagementVmPrivateIp *bool
 	// NSX cloud admin user name
 	NsxCloudAdmin *string
 	NsxtAddons    *NsxtAddons
@@ -909,12 +886,7 @@ type AwsWitnessEsx struct {
 	EsxId *string
 	// Host name
 	Hostname *string
-	// Possible values are:
-	//
-	// * WitnessEsx#WitnessEsx_PROVIDER_AWS
-	// * WitnessEsx#WitnessEsx_PROVIDER_ZEROCLOUD
-	//
-	//  The cloud provider for this witness Esx Host
+	// The cloud provider for this witness Esx Host
 	Provider string
 }
 
@@ -964,9 +936,7 @@ func (s *CloudProvider) GetDataValue__() (vapiData_.DataValue, []error) {
 }
 
 type Cluster struct {
-	// The capacity of this cluster.
-	ClusterCapacity *EntityCapacity
-	EsxHostList     []AwsEsxHost
+	EsxHostList []AwsEsxHost
 	// WCP details for a given cluster
 	WcpDetails *WcpDetails
 	// The Microsoft license configuration of this cluster.
@@ -985,22 +955,14 @@ type Cluster struct {
 	// Partition placement group infos
 	PartitionPlacementGroupInfo []PartitionPlacementGroupInfo
 	ClusterId                   string
-	// Possible values are:
-	//
-	// * Cluster#Cluster_AVAILABILITY_TYPE_SINGLE_AZ
-	// * Cluster#Cluster_AVAILABILITY_TYPE_MULTI_AZ
-	AvailabilityType *string
-	MgmtRpName       *string
 	// AWS Key Management Service information associated with this cluster
-	AwsKmsInfo        *AwsKmsInfo
-	AvailabilityZones []string
-	ComputeRpName     *string
+	AwsKmsInfo *AwsKmsInfo
 	// Witness node
 	VsanWitness      *AwsWitnessEsx
 	CustomProperties map[string]string
 	ClusterName      *string
-	// Version of vSAN used in this cluster. Empty means vsan 1.0
-	VsanVersion *string
+	// The capacity of this cluster.
+	ClusterCapacity *EntityCapacity
 	// Specifies whether hyperThreading is disabled/enabled explicitly
 	HyperThreadingEnabled *bool
 }
@@ -1009,8 +971,6 @@ const Cluster_CLUSTER_STATE_DEPLOYING = "DEPLOYING"
 const Cluster_CLUSTER_STATE_ADDING_HOSTS = "ADDING_HOSTS"
 const Cluster_CLUSTER_STATE_READY = "READY"
 const Cluster_CLUSTER_STATE_FAILED = "FAILED"
-const Cluster_AVAILABILITY_TYPE_SINGLE_AZ = "SINGLE_AZ"
-const Cluster_AVAILABILITY_TYPE_MULTI_AZ = "MULTI_AZ"
 
 func (s *Cluster) GetType__() vapiBindings_.BindingType {
 	return ClusterBindingType()
@@ -1036,16 +996,11 @@ type ClusterConfig struct {
 	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_R5_METAL
 	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_I3EN_METAL
 	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_I4I_METAL
-	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_C6I_METAL
-	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_M7I_METAL_48XL
-	// * ClusterConfig#ClusterConfig_HOST_INSTANCE_TYPE_M7I_METAL_24XL
 	//
 	//  The instance type for the esx hosts added to this cluster.
 	HostInstanceType *string
 	// For EBS-backed instances only, the requested storage capacity in GiB. format: int64
 	StorageCapacity *int64
-	// Cluster hosts need to be provisioned on these availability zones.
-	AvailabilityZones []string
 	// The desired Microsoft license status to apply to this cluster.
 	MsftLicenseConfig *MsftLicensingConfig
 	NumHosts          int64
@@ -1055,9 +1010,6 @@ const ClusterConfig_HOST_INSTANCE_TYPE_I3_METAL = "i3.metal"
 const ClusterConfig_HOST_INSTANCE_TYPE_R5_METAL = "r5.metal"
 const ClusterConfig_HOST_INSTANCE_TYPE_I3EN_METAL = "i3en.metal"
 const ClusterConfig_HOST_INSTANCE_TYPE_I4I_METAL = "i4i.metal"
-const ClusterConfig_HOST_INSTANCE_TYPE_C6I_METAL = "c6i.metal"
-const ClusterConfig_HOST_INSTANCE_TYPE_M7I_METAL_48XL = "m7i.metal-48xl"
-const ClusterConfig_HOST_INSTANCE_TYPE_M7I_METAL_24XL = "m7i.metal-24xl"
 
 func (s *ClusterConfig) GetType__() vapiBindings_.BindingType {
 	return ClusterConfigBindingType()
@@ -1484,7 +1436,7 @@ func (s *EniInfo) GetDataValue__() (vapiData_.DataValue, []error) {
 	return dataVal, nil
 }
 
-// Decribes the capacity of an entity in a provisioned cluster or to be used in an already-provisioned cluster.
+// Decribes the capacity of a given entity.
 type EntityCapacity struct {
 	// The storage capacity for the given entity in GiB.
 	StorageCapacityGib *int64
@@ -1571,13 +1523,10 @@ func (s *EsxConfig) GetDataValue__() (vapiData_.DataValue, []error) {
 }
 
 type EsxHost struct {
+	Name *string
 	// Availability zone where the host is provisioned.
 	AvailabilityZone *string
 	EsxId            *string
-	DurableHostName  *string
-	StateLastUpdated *time.Time
-	Name             *string
-	CustomProperties map[string]string
 	Hostname         *string
 	Provider         string
 	// Backing cloud provider instance type for host.
@@ -1595,7 +1544,8 @@ type EsxHost struct {
 	// * EsxHost#EsxHost_ESX_STATE_ADDING_TO_VCENTER
 	// * EsxHost#EsxHost_ESX_STATE_DELETING_FROM_VCENTER
 	// * EsxHost#EsxHost_ESX_STATE_PENDING_CLOUD_DELETION
-	EsxState *string
+	EsxState         *string
+	CustomProperties map[string]string
 }
 
 // Identifier denoting this class, when it is used in polymorphic context.
@@ -1642,29 +1592,6 @@ func (s *EsxHostInfo) GetDataValue__() (vapiData_.DataValue, []error) {
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
 		vapiLog_.Errorf("Error in ConvertToVapi for EsxHostInfo._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
-		return nil, err
-	}
-	return dataVal, nil
-}
-
-type EsxNicInfo struct {
-	Ip       *string
-	Mac      *string
-	Vlan     *string
-	Gateway  *string
-	NetStack *string
-}
-
-func (s *EsxNicInfo) GetType__() vapiBindings_.BindingType {
-	return EsxNicInfoBindingType()
-}
-
-func (s *EsxNicInfo) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
-	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
-	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EsxNicInfo._GetDataValue method - %s",
 			vapiBindings_.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
@@ -1838,39 +1765,6 @@ func (s *GlcmBundle) GetDataValue__() (vapiData_.DataValue, []error) {
 	return dataVal, nil
 }
 
-// Decribes the capacity of an instance-type for an unprovisioned sddc or cluster.
-type InstanceEntityCapacity struct {
-	// The storage capacity for the given entity in GiB.
-	StorageCapacityGib *int64
-	// The memory capacity for the given entity in GiB.
-	MemoryCapacityGib *int64
-	// The number of CPU cores for the given entity.
-	TotalNumberOfCores *int64
-	// The number of SSDs for the given entity.
-	NumberOfSsds *int64
-	// The CPU capacity for the given entity in Ghz.
-	CpuCapacityGhz *float64
-	// The number of sockets for the given entity.
-	NumberOfSockets *int64
-	// The vSAN ESA storage capacity for the given entity in GiB.
-	EsaStorageCapacityGib *int64
-}
-
-func (s *InstanceEntityCapacity) GetType__() vapiBindings_.BindingType {
-	return InstanceEntityCapacityBindingType()
-}
-
-func (s *InstanceEntityCapacity) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
-	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
-	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for InstanceEntityCapacity._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
-		return nil, err
-	}
-	return dataVal, nil
-}
-
 type InstanceProfileInfo struct {
 	RoleName            *string
 	InstanceProfileName *string
@@ -1894,18 +1788,16 @@ func (s *InstanceProfileInfo) GetDataValue__() (vapiData_.DataValue, []error) {
 
 // Represents a structure for basic instance type config.
 type InstanceTypeBasicConfig struct {
-	// Boolean to indicate whether clusters and SDDCs using this instance type support vSAN ESA.
-	VsanEsaSupported *bool
+	// Instance type name.
+	InstanceType *string
+	// Label for instance_type.
+	Label *string
 	// Display name of instance_type.
 	DisplayName *string
 	// Description of the instance_type.
 	Description *string
-	// Instance type name.
-	InstanceType *string
 	// The capacity of the given instance type.
-	EntityCapacity *InstanceEntityCapacity
-	// Label for instance_type.
-	Label *string
+	EntityCapacity *EntityCapacity
 }
 
 func (s *InstanceTypeBasicConfig) GetType__() vapiBindings_.BindingType {
@@ -1925,28 +1817,24 @@ func (s *InstanceTypeBasicConfig) GetDataValue__() (vapiData_.DataValue, []error
 
 // Represents a structure for instance type config
 type InstanceTypeConfig struct {
-	// Boolean to indicate whether clusters and SDDCs using this instance type support vSAN ESA.
-	VsanEsaSupported *bool
+	// Instance type name.
+	InstanceType *string
+	// Label for instance_type.
+	Label *string
 	// Display name of instance_type.
 	DisplayName *string
 	// Description of the instance_type.
 	Description *string
-	// Instance type name.
-	InstanceType *string
 	// The capacity of the given instance type.
-	EntityCapacity *InstanceEntityCapacity
-	// Label for instance_type.
-	Label *string
-	// Error due to which instance provisioning is restricted on the cluster.
-	InstanceProvisioningErrorCause *string
-	// Map of host count vs valid cpu core values for the given instance type.
-	SupportedCpuCores map[string][]int64
+	EntityCapacity *EntityCapacity
+	// Boolean to indicate whether hyperThreading is supported for an instance type.
+	HyperThreadingSupported *bool
 	// Array of number of hosts allowed for this operation. Range of hosts user can select for sddc provision
 	Hosts []int64
 	// Array of valid cpu cores values for the given instance type.
 	CpuCores []int64
-	// Boolean to indicate whether hyperThreading is supported for an instance type.
-	HyperThreadingSupported *bool
+	// Error message for instance provisioning.
+	InstanceProvisioningErrorCause *string
 }
 
 func (s *InstanceTypeConfig) GetType__() vapiBindings_.BindingType {
@@ -2026,32 +1914,6 @@ func (s *L2Vpn) GetDataValue__() (vapiData_.DataValue, []error) {
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
 		vapiLog_.Errorf("Error in ConvertToVapi for L2Vpn._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
-		return nil, err
-	}
-	return dataVal, nil
-}
-
-type LinkRequest struct {
-	// The UUID of the task we're using to track the status of this link request. format: uuid
-	TrackingTask *string
-	// The time at which the template URL expires. Once this has elapsed, the request is no longer invokable. format: date-time
-	ExpirationDate *time.Time
-	// The constructed template URL. Just shows the contents of the template for viewing/download.
-	TemplateUrl *string
-	// The final URL to be given to the user as a \"click here to start\" link.
-	TemplateExecutionUrl *string
-}
-
-func (s *LinkRequest) GetType__() vapiBindings_.BindingType {
-	return LinkRequestBindingType()
-}
-
-func (s *LinkRequest) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
-	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
-	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for LinkRequest._GetDataValue method - %s",
 			vapiBindings_.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
@@ -2535,14 +2397,14 @@ type Organization struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 	// ORG_TYPE to be associated with the org
@@ -2709,9 +2571,8 @@ type PopInfo struct {
 	//
 	// * PopInfo#PopInfo_OS_TYPE_CENTOS
 	// * PopInfo#PopInfo_OS_TYPE_AMAZON
-	// * PopInfo#PopInfo_OS_TYPE_PHOTON
 	//
-	//  Type of OS: CENTOS or AMAZON(Amazon Linux 2) or PHOTON
+	//  Type of OS: CENTOS or AMAZON(Amazon Linux 2)
 	OsType *string
 	// UUID of the PopInfo format: UUID
 	Id *string
@@ -2719,7 +2580,6 @@ type PopInfo struct {
 
 const PopInfo_OS_TYPE_CENTOS = "CENTOS"
 const PopInfo_OS_TYPE_AMAZON = "AMAZON"
-const PopInfo_OS_TYPE_PHOTON = "PHOTON"
 
 func (s *PopInfo) GetType__() vapiBindings_.BindingType {
 	return PopInfoBindingType()
@@ -2764,28 +2624,24 @@ func (s *PopServiceInfo) GetDataValue__() (vapiData_.DataValue, []error) {
 
 // Represents a structure for powered by instance type configuration.
 type PoweredByInstanceTypeConfig struct {
-	// Boolean to indicate whether clusters and SDDCs using this instance type support vSAN ESA.
-	VsanEsaSupported *bool
+	// Instance type name.
+	InstanceType *string
+	// Label for instance_type.
+	Label *string
 	// Display name of instance_type.
 	DisplayName *string
 	// Description of the instance_type.
 	Description *string
-	// Instance type name.
-	InstanceType *string
 	// The capacity of the given instance type.
-	EntityCapacity *InstanceEntityCapacity
-	// Label for instance_type.
-	Label *string
-	// Error due to which instance provisioning is restricted on the cluster.
-	InstanceProvisioningErrorCause *string
-	// Map of host count vs valid cpu core values for the given instance type.
-	SupportedCpuCores map[string][]int64
+	EntityCapacity *EntityCapacity
+	// Boolean to indicate whether hyperThreading is supported for an instance type.
+	HyperThreadingSupported *bool
 	// Array of number of hosts allowed for this operation. Range of hosts user can select for sddc provision
 	Hosts []int64
 	// Array of valid cpu cores values for the given instance type.
 	CpuCores []int64
-	// Boolean to indicate whether hyperThreading is supported for an instance type.
-	HyperThreadingSupported *bool
+	// Error message for instance provisioning.
+	InstanceProvisioningErrorCause *string
 	// ID of the powered by configuration.
 	PoweredById *string
 	// Possible values are:
@@ -3065,14 +2921,14 @@ type Sddc struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 	// name for SDDC
@@ -3163,10 +3019,17 @@ func (s *SddcChoice) GetDataValue__() (vapiData_.DataValue, []error) {
 type SddcConfig struct {
 	// Indicates the desired licensing support, if any, of Microsoft software.
 	MsftLicenseConfig *MsftLicensingConfig
-	// The account linking configuration, we will keep this one and remove accountLinkSddcConfig finally.
-	AccountLinkConfig *AccountLinkConfig
 	// AWS VPC IP range. Only prefix of 16 or 20 is currently supported.
 	VpcCidr *string
+	// Possible values are:
+	//
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_R5_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3EN_METAL
+	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I4I_METAL
+	//
+	//  The instance type for the esx hosts in the primary cluster of the SDDC.
+	HostInstanceType *string
 	// skip creating vxlan for compute gateway for SDDC provisioning
 	SkipCreatingVxlan *bool
 	// VXLAN IP subnet in CIDR for compute gateway
@@ -3187,35 +3050,13 @@ type SddcConfig struct {
 	Name            string
 	// A list of the SDDC linking configurations to use.
 	AccountLinkSddcConfig []AccountLinkSddcConfig
-	// Possible values are:
-	//
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_R5_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I3EN_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_I4I_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_C6I_METAL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_48XL
-	// * SddcConfig#SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_24XL
-	//
-	//  The instance type for the esx hosts in the primary cluster of the SDDC.
-	HostInstanceType *string
-	// Identifier of the billing account in subscription.
-	BillingAccountId *string
-	Region           *string
 	// If provided, will be assigned as SDDC id of the provisioned SDDC. format: UUID
-	SddcId *string
-	// If provided, configuration from the template will applied to the provisioned SDDC. format: UUID
-	SddcTemplateId *string
+	SddcId   *string
+	NumHosts int64
 	// Denotes the sddc type , if the value is null or empty, the type is considered as default.
 	SddcType *string
-	// Possible values are:
-	//
-	// * SddcConfig#SddcConfig_VSAN_VERSION_VSAN1
-	// * SddcConfig#SddcConfig_VSAN_VERSION_VSANESA
-	// * SddcConfig#SddcConfig_VSAN_VERSION_NOVSAN
-	//
-	//  The vSAN version to be used in the SDDC's primary cluster.
-	VsanVersion *string
+	// The account linking configuration, we will keep this one and remove accountLinkSddcConfig finally.
+	AccountLinkConfig *AccountLinkConfig
 	// Possible values are:
 	//
 	// * SddcConfig#SddcConfig_PROVIDER_AWS
@@ -3225,7 +3066,8 @@ type SddcConfig struct {
 	Provider string
 	// The SSO domain name to use for vSphere users. If not specified, vmc.local will be used.
 	SsoDomain *string
-	NumHosts  int64
+	// If provided, configuration from the template will applied to the provisioned SDDC. format: UUID
+	SddcTemplateId *string
 	// Possible values are:
 	//
 	// * SddcConfig#SddcConfig_DEPLOYMENT_TYPE_SINGLEAZ
@@ -3239,20 +3081,14 @@ type SddcConfig struct {
 //
 // This value should be assigned to the property which is used to discriminate the actual type used in the polymorphic context.
 const SddcConfig__TYPE_IDENTIFIER = "SddcConfig"
-const SddcConfig_SIZE_NSX_SMALL = "nsx_small"
-const SddcConfig_SIZE_MEDIUM = "medium"
-const SddcConfig_SIZE_LARGE = "large"
-const SddcConfig_SIZE_NSX_LARGE = "nsx_large"
 const SddcConfig_HOST_INSTANCE_TYPE_I3_METAL = "i3.metal"
 const SddcConfig_HOST_INSTANCE_TYPE_R5_METAL = "r5.metal"
 const SddcConfig_HOST_INSTANCE_TYPE_I3EN_METAL = "i3en.metal"
 const SddcConfig_HOST_INSTANCE_TYPE_I4I_METAL = "i4i.metal"
-const SddcConfig_HOST_INSTANCE_TYPE_C6I_METAL = "c6i.metal"
-const SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_48XL = "m7i.metal-48xl"
-const SddcConfig_HOST_INSTANCE_TYPE_M7I_METAL_24XL = "m7i.metal-24xl"
-const SddcConfig_VSAN_VERSION_VSAN1 = "vsan1"
-const SddcConfig_VSAN_VERSION_VSANESA = "vsanesa"
-const SddcConfig_VSAN_VERSION_NOVSAN = "novsan"
+const SddcConfig_SIZE_NSX_SMALL = "nsx_small"
+const SddcConfig_SIZE_MEDIUM = "medium"
+const SddcConfig_SIZE_LARGE = "large"
+const SddcConfig_SIZE_NSX_LARGE = "nsx_large"
 const SddcConfig_PROVIDER_AWS = "AWS"
 const SddcConfig_PROVIDER_ZEROCLOUD = "ZEROCLOUD"
 const SddcConfig_DEPLOYMENT_TYPE_SINGLEAZ = "SingleAZ"
@@ -3480,72 +3316,65 @@ type SddcResourceConfig struct {
 	VcIp *string
 	// Name for management appliance network.
 	MgmtApplianceNetworkName *string
+	// Management Gateway Id
+	MgwId *string
 	// URL of the NSX Manager
 	NsxMgrUrl *string
-	// This flag determines whether vLCM is enabled on this sddc or not.
-	VlcmEnabled *bool
-	// NSX cloud audit Password
-	NsxCloudAuditPassword *string
+	// skip creating vxlan for compute gateway for SDDC provisioning
+	SkipCreatingVxlan *bool
+	// ESX host subnet
+	EsxHostSubnet *string
 	// vCenter to csp federation status.
 	VcCspLoginStatus *string
-	// NSX cloud admin password
-	NsxCloudAdminPassword *string
 	// The ManagedObjectReference of the management Datastore
 	ManagementDs *string
 	// nsx api entire base url
 	NsxApiPublicEndpointUrl *string
 	// Nfs Mode Flag, for nfs mounting.
-	NfsMode *bool
-	// Password for vCenter SDDC administrator
-	CloudPassword *string
-	SddcNetworks  []string
+	NfsMode      *bool
+	SddcNetworks []string
 	// List of clusters in the SDDC.
 	Clusters []Cluster
-	// Username for vCenter SDDC administrator
-	CloudUsername *string
 	// Possible values are:
 	//
 	// * SddcResourceConfig#SddcResourceConfig_DEPLOYMENT_TYPE_SINGLE_AZ
 	// * SddcResourceConfig#SddcResourceConfig_DEPLOYMENT_TYPE_MULTI_AZ
 	//
 	//  Denotes if this is a SingleAZ SDDC or a MultiAZ SDDC.
-	DeploymentType         *string
-	PopAgentXeniConnection *PopAgentXeniConnection
+	DeploymentType *string
 	// NSX Manager internal management IP
 	NsxMgrManagementIp *string
 	// NSX cloud audit user name
 	NsxCloudAudit *string
 	// Cluster Id to add ESX workflow
 	EsxClusterId *string
-	// Management Gateway Id
-	MgwId *string
+	// vCenter public IP
+	VcPublicIp *string
 	// URL of the vCenter server
 	VcUrl    *string
 	EsxHosts []AwsEsxHost
-	// Group name for vCenter SDDC administrator
-	CloudUserGroup *string
+	// vCenter internal management IP
+	VcManagementIp *string
 	ManagementRp   *string
 	// Availability zone where the witness node is provisioned for a MultiAZ SDDC. This is null for a SingleAZ SDDC.
 	WitnessAvailabilityZone *string
 	// Whether this sddc is maintained by its desired state documents.
 	SddcDesiredState *bool
 	SddcSize         *SddcSize
-	// This flag determines whether CVDS is enabled on this sddc or not.
-	CvdsEnabled *bool
+	// NSX-T Native Oauth client for UI.
+	NsxNativeClient *CspOauthClient
 	// List of Controller IPs
 	NsxControllerIps []string
 	// Marks that the SDDC VC should be deployed with two hostnames.
 	TwoHostnameVcDeployment *bool
-	// ESX host subnet
-	EsxHostSubnet *string
 	// The SSO domain name to use for vSphere users
 	SsoDomain *string
+	// The Microsoft license status of this SDDC.
+	MsftLicenseConfig *MsftLicensingConfig
 	// region in which sddc is deployed
 	Region *string
-	// if true, use the private IP addresses to register DNS records for the management VMs
-	DnsWithManagementVmPrivateIp *bool
-	// vCenter public IP
-	VcPublicIp *string
+	// Outpost configuration of this SDDC.
+	OutpostConfig *OutpostConfig
 	// (deprecated)
 	PscIp *string
 	// if true, NSX-T UI is enabled.
@@ -3562,6 +3391,10 @@ type SddcResourceConfig struct {
 	// Mark if Containerized Permissions has been enabled on vCenter.
 	VcContainerizedPermissionsEnabled *bool
 	CustomProperties                  map[string]string
+	// NSX cloud audit Password
+	NsxCloudAuditPassword *string
+	// Password for vCenter SDDC administrator
+	CloudPassword *string
 	// Possible values are:
 	//
 	// * SddcResourceConfig#SddcResourceConfig_PROVIDER_AWS
@@ -3569,30 +3402,31 @@ type SddcResourceConfig struct {
 	//
 	//  Discriminator for additional properties
 	Provider string
-	// vCenter internal management IP
-	VcManagementIp *string
-	// The Microsoft license status of this SDDC.
-	MsftLicenseConfig *MsftLicensingConfig
-	// NSX-T Native Oauth client for UI.
-	NsxNativeClient *CspOauthClient
+	// NSX cloud admin password
+	NsxCloudAdminPassword *string
+	// Username for vCenter SDDC administrator
+	CloudUsername *string
+	// This flag determines whether CVDS is enabled on this sddc or not.
+	CvdsEnabled *bool
 	// unique id of the vCenter server
 	VcInstanceId *string
-	// oAuth client for enabling federation on vCenter.
-	VcOauthClient *CspOauthClient
-	// skip creating vxlan for compute gateway for SDDC provisioning
-	SkipCreatingVxlan *bool
-	SddcManifest      *SddcManifest
+	// Group name for vCenter SDDC administrator
+	CloudUserGroup *string
+	// This flag determines whether vLCM is enabled on this sddc or not.
+	VlcmEnabled  *bool
+	SddcManifest *SddcManifest
 	// VXLAN IP subnet
 	VxlanSubnet  *string
 	SddcSecurity *SddcSecurity
 	// sddc identifier
-	SddcId *string
-	// Outpost configuration of this SDDC.
-	OutpostConfig *OutpostConfig
+	SddcId                 *string
+	PopAgentXeniConnection *PopAgentXeniConnection
 	// URL of the NSX Manager UI login for local user access
 	NsxMgrLoginUrl *string
 	// Break-glass URL for non-federated login.
 	VcBreakGlassUrl *string
+	// if true, use the private IP addresses to register DNS records for the management VMs
+	DnsWithManagementVmPrivateIp *bool
 	// NSX cloud admin user name
 	NsxCloudAdmin *string
 	NsxtAddons    *NsxtAddons
@@ -3736,14 +3570,14 @@ type SddcTemplate struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 	// A list of the SDDC linking configurations to use.
@@ -3821,14 +3655,14 @@ type ServiceQuotaRequest struct {
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id             string
 	RequesterEmail *string
@@ -4201,39 +4035,19 @@ func (s *SupportWindowId) GetDataValue__() (vapiData_.DataValue, []error) {
 	return dataVal, nil
 }
 
-type Tag struct {
-	Key   *string
-	Value *string
-}
-
-func (s *Tag) GetType__() vapiBindings_.BindingType {
-	return TagBindingType()
-}
-
-func (s *Tag) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
-	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
-	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for Tag._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
-		return nil, err
-	}
-	return dataVal, nil
-}
-
 type Task struct {
 	Updated time.Time
 	// User id that last updated this record
 	UserId string
 	// User id that last updated this record
-	UpdatedByUserId *string
+	UpdatedByUserId string
 	Created         time.Time
 	// Version of this entity format: int32
 	Version int64
 	// User name that last updated this record
 	UpdatedByUserName *string
 	// User name that last updated this record
-	UserName *string
+	UserName string
 	// Unique ID for this entity
 	Id string
 	// Possible values are:
@@ -4839,6 +4653,35 @@ func (s *VsanConfigConstraints) GetDataValue__() (vapiData_.DataValue, []error) 
 	return dataVal, nil
 }
 
+// Polymorphic object representing host storage spec.
+type VsanDiskgroupMapping struct {
+	// Possible values are:
+	//
+	// * VsanDiskgroupMapping#VsanDiskgroupMapping_MAPPING_TYPE_SERIAL
+	// * VsanDiskgroupMapping#VsanDiskgroupMapping_MAPPING_TYPE_CANONICAL
+	// * VsanDiskgroupMapping#VsanDiskgroupMapping_MAPPING_TYPE_SYMMETRIC
+	MappingType string
+}
+
+const VsanDiskgroupMapping_MAPPING_TYPE_SERIAL = "SERIAL"
+const VsanDiskgroupMapping_MAPPING_TYPE_CANONICAL = "CANONICAL"
+const VsanDiskgroupMapping_MAPPING_TYPE_SYMMETRIC = "SYMMETRIC"
+
+func (s *VsanDiskgroupMapping) GetType__() vapiBindings_.BindingType {
+	return VsanDiskgroupMappingBindingType()
+}
+
+func (s *VsanDiskgroupMapping) GetDataValue__() (vapiData_.DataValue, []error) {
+	typeConverter := vapiBindings_.NewTypeConverter()
+	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
+	if err != nil {
+		vapiLog_.Errorf("Error in ConvertToVapi for VsanDiskgroupMapping._GetDataValue method - %s",
+			vapiBindings_.VAPIerrorsToError(err).Error())
+		return nil, err
+	}
+	return dataVal, nil
+}
+
 type VsanEncryptionConfig struct {
 	// Port to connect to AWS Key Management Service
 	Port *int64
@@ -4937,12 +4780,7 @@ type WitnessEsx struct {
 	EsxId *string
 	// Host name
 	Hostname *string
-	// Possible values are:
-	//
-	// * WitnessEsx#WitnessEsx_PROVIDER_AWS
-	// * WitnessEsx#WitnessEsx_PROVIDER_ZEROCLOUD
-	//
-	//  The cloud provider for this witness Esx Host
+	// The cloud provider for this witness Esx Host
 	Provider string
 }
 
@@ -4955,8 +4793,6 @@ const WitnessEsx_ENUM_STATE_PROVISIONED = "PROVISIONED"
 const WitnessEsx_ENUM_STATE_DELETING = "DELETING"
 const WitnessEsx_ENUM_STATE_READY = "READY"
 const WitnessEsx_ENUM_STATE_FAILED = "FAILED"
-const WitnessEsx_PROVIDER_AWS = "AWS"
-const WitnessEsx_PROVIDER_ZEROCLOUD = "ZEROCLOUD"
 
 func (s *WitnessEsx) GetType__() vapiBindings_.BindingType {
 	return WitnessEsxBindingType()
@@ -5005,7 +4841,7 @@ func AbstractEntityBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -5013,7 +4849,7 @@ func AbstractEntityBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -5214,7 +5050,7 @@ func AwsCustomerConnectedAccountBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -5222,7 +5058,7 @@ func AwsCustomerConnectedAccountBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -5251,32 +5087,20 @@ func AwsCustomerConnectedAccountBindingType() vapiBindings_.BindingType {
 func AwsEsxHostBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["capacity_pool"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["capacity_pool"] = "CapacityPool"
 	fields["eni_list"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(EniInfoBindingType), reflect.TypeOf([]EniInfo{})))
 	fieldNameMap["eni_list"] = "EniList"
+	fields["internal_public_ip_pool"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(SddcPublicIpBindingType), reflect.TypeOf([]SddcPublicIp{})))
+	fieldNameMap["internal_public_ip_pool"] = "InternalPublicIpPool"
 	fields["xeni_info"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(XEniInfoBindingType))
 	fieldNameMap["xeni_info"] = "XeniInfo"
 	fields["partition_number"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
 	fieldNameMap["partition_number"] = "PartitionNumber"
-	fields["ec2_instance_running_status_count"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["ec2_instance_running_status_count"] = "Ec2InstanceRunningStatusCount"
-	fields["esx_nic_info"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EsxNicInfoBindingType))
-	fieldNameMap["esx_nic_info"] = "EsxNicInfo"
-	fields["internal_public_ip_pool"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(SddcPublicIpBindingType), reflect.TypeOf([]SddcPublicIp{})))
-	fieldNameMap["internal_public_ip_pool"] = "InternalPublicIpPool"
+	fields["name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["name"] = "Name"
 	fields["availability_zone"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["availability_zone"] = "AvailabilityZone"
 	fields["esx_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_id"] = "EsxId"
-	fields["durable_host_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["durable_host_name"] = "DurableHostName"
-	fields["state_last_updated"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDateTimeType())
-	fieldNameMap["state_last_updated"] = "StateLastUpdated"
-	fields["name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["name"] = "Name"
-	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
-	fieldNameMap["custom_properties"] = "CustomProperties"
 	fields["hostname"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["hostname"] = "Hostname"
 	fields["provider"] = vapiBindings_.NewStringType()
@@ -5287,6 +5111,8 @@ func AwsEsxHostBindingType() vapiBindings_.BindingType {
 	fieldNameMap["mac_address"] = "MacAddress"
 	fields["esx_state"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_state"] = "EsxState"
+	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
+	fieldNameMap["custom_properties"] = "CustomProperties"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.aws_esx_host", fields, reflect.TypeOf(AwsEsxHost{}), fieldNameMap, validators)
 }
@@ -5300,7 +5126,7 @@ func AwsKeyPairBindingType() vapiBindings_.BindingType {
 	fieldNameMap["key_fingerprint"] = "KeyFingerprint"
 	fields["key_material"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["key_material"] = "KeyMaterial"
-	fields["tags"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(TagBindingType), reflect.TypeOf([]Tag{})))
+	fields["tags"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["tags"] = "Tags"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.aws_key_pair", fields, reflect.TypeOf(AwsKeyPair{}), fieldNameMap, validators)
@@ -5320,12 +5146,14 @@ func AwsSddcConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap := make(map[string]string)
 	fields["existing_vpc_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["existing_vpc_id"] = "ExistingVpcId"
+	fields["region"] = vapiBindings_.NewStringType()
+	fieldNameMap["region"] = "Region"
 	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
 	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
-	fields["account_link_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AccountLinkConfigBindingType))
-	fieldNameMap["account_link_config"] = "AccountLinkConfig"
 	fields["vpc_cidr"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vpc_cidr"] = "VpcCidr"
+	fields["host_instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["host_instance_type"] = "HostInstanceType"
 	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
 	fields["vxlan_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -5340,26 +5168,20 @@ func AwsSddcConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["name"] = "Name"
 	fields["account_link_sddc_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(AccountLinkSddcConfigBindingType), reflect.TypeOf([]AccountLinkSddcConfig{})))
 	fieldNameMap["account_link_sddc_config"] = "AccountLinkSddcConfig"
-	fields["host_instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["host_instance_type"] = "HostInstanceType"
-	fields["billing_account_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["billing_account_id"] = "BillingAccountId"
-	fields["region"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["region"] = "Region"
 	fields["sddc_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_id"] = "SddcId"
-	fields["sddc_template_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["sddc_template_id"] = "SddcTemplateId"
+	fields["num_hosts"] = vapiBindings_.NewIntegerType()
+	fieldNameMap["num_hosts"] = "NumHosts"
 	fields["sddc_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_type"] = "SddcType"
-	fields["vsan_version"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vsan_version"] = "VsanVersion"
+	fields["account_link_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AccountLinkConfigBindingType))
+	fieldNameMap["account_link_config"] = "AccountLinkConfig"
 	fields["provider"] = vapiBindings_.NewStringType()
 	fieldNameMap["provider"] = "Provider"
 	fields["sso_domain"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sso_domain"] = "SsoDomain"
-	fields["num_hosts"] = vapiBindings_.NewIntegerType()
-	fieldNameMap["num_hosts"] = "NumHosts"
+	fields["sddc_template_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["sddc_template_id"] = "SddcTemplateId"
 	fields["deployment_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["deployment_type"] = "DeploymentType"
 	var validators = []vapiBindings_.Validator{}
@@ -5373,7 +5195,7 @@ func AwsSddcConnectionBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -5381,7 +5203,7 @@ func AwsSddcConnectionBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -5448,48 +5270,42 @@ func AwsSddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["vc_ip"] = "VcIp"
 	fields["mgmt_appliance_network_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["mgmt_appliance_network_name"] = "MgmtApplianceNetworkName"
+	fields["mgw_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["mgw_id"] = "MgwId"
 	fields["nsx_mgr_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_url"] = "NsxMgrUrl"
-	fields["vlcm_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["vlcm_enabled"] = "VlcmEnabled"
-	fields["nsx_cloud_audit_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["nsx_cloud_audit_password"] = "NsxCloudAuditPassword"
+	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
+	fields["esx_host_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["esx_host_subnet"] = "EsxHostSubnet"
 	fields["vc_csp_login_status"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_csp_login_status"] = "VcCspLoginStatus"
-	fields["nsx_cloud_admin_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["nsx_cloud_admin_password"] = "NsxCloudAdminPassword"
 	fields["management_ds"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["management_ds"] = "ManagementDs"
 	fields["nsx_api_public_endpoint_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_api_public_endpoint_url"] = "NsxApiPublicEndpointUrl"
 	fields["nfs_mode"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["nfs_mode"] = "NfsMode"
-	fields["cloud_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_password"] = "CloudPassword"
 	fields["sddc_networks"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["sddc_networks"] = "SddcNetworks"
 	fields["clusters"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(ClusterBindingType), reflect.TypeOf([]Cluster{})))
 	fieldNameMap["clusters"] = "Clusters"
-	fields["cloud_username"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_username"] = "CloudUsername"
 	fields["deployment_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["deployment_type"] = "DeploymentType"
-	fields["pop_agent_xeni_connection"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(PopAgentXeniConnectionBindingType))
-	fieldNameMap["pop_agent_xeni_connection"] = "PopAgentXeniConnection"
 	fields["nsx_mgr_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_management_ip"] = "NsxMgrManagementIp"
 	fields["nsx_cloud_audit"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_cloud_audit"] = "NsxCloudAudit"
 	fields["esx_cluster_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_cluster_id"] = "EsxClusterId"
-	fields["mgw_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["mgw_id"] = "MgwId"
+	fields["vc_public_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["vc_public_ip"] = "VcPublicIp"
 	fields["vc_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_url"] = "VcUrl"
 	fields["esx_hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(AwsEsxHostBindingType), reflect.TypeOf([]AwsEsxHost{})))
 	fieldNameMap["esx_hosts"] = "EsxHosts"
-	fields["cloud_user_group"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_user_group"] = "CloudUserGroup"
+	fields["vc_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["vc_management_ip"] = "VcManagementIp"
 	fields["management_rp"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["management_rp"] = "ManagementRp"
 	fields["witness_availability_zone"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -5498,22 +5314,20 @@ func AwsSddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["sddc_desired_state"] = "SddcDesiredState"
 	fields["sddc_size"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(SddcSizeBindingType))
 	fieldNameMap["sddc_size"] = "SddcSize"
-	fields["cvds_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["cvds_enabled"] = "CvdsEnabled"
+	fields["nsx_native_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
+	fieldNameMap["nsx_native_client"] = "NsxNativeClient"
 	fields["nsx_controller_ips"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["nsx_controller_ips"] = "NsxControllerIps"
 	fields["two_hostname_vc_deployment"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["two_hostname_vc_deployment"] = "TwoHostnameVcDeployment"
-	fields["esx_host_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["esx_host_subnet"] = "EsxHostSubnet"
 	fields["sso_domain"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sso_domain"] = "SsoDomain"
+	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
+	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
 	fields["region"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["region"] = "Region"
-	fields["dns_with_management_vm_private_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["dns_with_management_vm_private_ip"] = "DnsWithManagementVmPrivateIp"
-	fields["vc_public_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vc_public_ip"] = "VcPublicIp"
+	fields["outpost_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(OutpostConfigBindingType))
+	fieldNameMap["outpost_config"] = "OutpostConfig"
 	fields["psc_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["psc_ip"] = "PscIp"
 	fields["nsxt"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
@@ -5532,20 +5346,24 @@ func AwsSddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["vc_containerized_permissions_enabled"] = "VcContainerizedPermissionsEnabled"
 	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
 	fieldNameMap["custom_properties"] = "CustomProperties"
+	fields["nsx_cloud_audit_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["nsx_cloud_audit_password"] = "NsxCloudAuditPassword"
+	fields["cloud_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_password"] = "CloudPassword"
 	fields["provider"] = vapiBindings_.NewStringType()
 	fieldNameMap["provider"] = "Provider"
-	fields["vc_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vc_management_ip"] = "VcManagementIp"
-	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
-	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
-	fields["nsx_native_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
-	fieldNameMap["nsx_native_client"] = "NsxNativeClient"
+	fields["nsx_cloud_admin_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["nsx_cloud_admin_password"] = "NsxCloudAdminPassword"
+	fields["cloud_username"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_username"] = "CloudUsername"
+	fields["cvds_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["cvds_enabled"] = "CvdsEnabled"
 	fields["vc_instance_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_instance_id"] = "VcInstanceId"
-	fields["vc_oauth_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
-	fieldNameMap["vc_oauth_client"] = "VcOauthClient"
-	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
+	fields["cloud_user_group"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_user_group"] = "CloudUserGroup"
+	fields["vlcm_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["vlcm_enabled"] = "VlcmEnabled"
 	fields["sddc_manifest"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(SddcManifestBindingType))
 	fieldNameMap["sddc_manifest"] = "SddcManifest"
 	fields["vxlan_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -5554,12 +5372,14 @@ func AwsSddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["sddc_security"] = "SddcSecurity"
 	fields["sddc_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_id"] = "SddcId"
-	fields["outpost_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(OutpostConfigBindingType))
-	fieldNameMap["outpost_config"] = "OutpostConfig"
+	fields["pop_agent_xeni_connection"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(PopAgentXeniConnectionBindingType))
+	fieldNameMap["pop_agent_xeni_connection"] = "PopAgentXeniConnection"
 	fields["nsx_mgr_login_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_login_url"] = "NsxMgrLoginUrl"
 	fields["vc_break_glass_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_break_glass_url"] = "VcBreakGlassUrl"
+	fields["dns_with_management_vm_private_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["dns_with_management_vm_private_ip"] = "DnsWithManagementVmPrivateIp"
 	fields["nsx_cloud_admin"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_cloud_admin"] = "NsxCloudAdmin"
 	fields["nsxt_addons"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(NsxtAddonsBindingType))
@@ -5628,8 +5448,6 @@ func CloudProviderBindingType() vapiBindings_.BindingType {
 func ClusterBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["cluster_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EntityCapacityBindingType))
-	fieldNameMap["cluster_capacity"] = "ClusterCapacity"
 	fields["esx_host_list"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(AwsEsxHostBindingType), reflect.TypeOf([]AwsEsxHost{})))
 	fieldNameMap["esx_host_list"] = "EsxHostList"
 	fields["wcp_details"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(WcpDetailsBindingType))
@@ -5646,24 +5464,16 @@ func ClusterBindingType() vapiBindings_.BindingType {
 	fieldNameMap["partition_placement_group_info"] = "PartitionPlacementGroupInfo"
 	fields["cluster_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["cluster_id"] = "ClusterId"
-	fields["availability_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["availability_type"] = "AvailabilityType"
-	fields["mgmt_rp_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["mgmt_rp_name"] = "MgmtRpName"
 	fields["aws_kms_info"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AwsKmsInfoBindingType))
 	fieldNameMap["aws_kms_info"] = "AwsKmsInfo"
-	fields["availability_zones"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
-	fieldNameMap["availability_zones"] = "AvailabilityZones"
-	fields["compute_rp_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["compute_rp_name"] = "ComputeRpName"
 	fields["vsan_witness"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AwsWitnessEsxBindingType))
 	fieldNameMap["vsan_witness"] = "VsanWitness"
 	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
 	fieldNameMap["custom_properties"] = "CustomProperties"
 	fields["cluster_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["cluster_name"] = "ClusterName"
-	fields["vsan_version"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vsan_version"] = "VsanVersion"
+	fields["cluster_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EntityCapacityBindingType))
+	fieldNameMap["cluster_capacity"] = "ClusterCapacity"
 	fields["hyper_threading_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["hyper_threading_enabled"] = "HyperThreadingEnabled"
 	var validators = []vapiBindings_.Validator{}
@@ -5679,8 +5489,6 @@ func ClusterConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["host_instance_type"] = "HostInstanceType"
 	fields["storage_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
 	fieldNameMap["storage_capacity"] = "StorageCapacity"
-	fields["availability_zones"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
-	fieldNameMap["availability_zones"] = "AvailabilityZones"
 	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
 	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
 	fields["num_hosts"] = vapiBindings_.NewIntegerType()
@@ -5960,18 +5768,12 @@ func EsxConfigBindingType() vapiBindings_.BindingType {
 func EsxHostBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
+	fields["name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["name"] = "Name"
 	fields["availability_zone"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["availability_zone"] = "AvailabilityZone"
 	fields["esx_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_id"] = "EsxId"
-	fields["durable_host_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["durable_host_name"] = "DurableHostName"
-	fields["state_last_updated"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDateTimeType())
-	fieldNameMap["state_last_updated"] = "StateLastUpdated"
-	fields["name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["name"] = "Name"
-	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
-	fieldNameMap["custom_properties"] = "CustomProperties"
 	fields["hostname"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["hostname"] = "Hostname"
 	fields["provider"] = vapiBindings_.NewStringType()
@@ -5982,6 +5784,8 @@ func EsxHostBindingType() vapiBindings_.BindingType {
 	fieldNameMap["mac_address"] = "MacAddress"
 	fields["esx_state"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_state"] = "EsxState"
+	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
+	fieldNameMap["custom_properties"] = "CustomProperties"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.esx_host", fields, reflect.TypeOf(EsxHost{}), fieldNameMap, validators)
 }
@@ -5993,23 +5797,6 @@ func EsxHostInfoBindingType() vapiBindings_.BindingType {
 	fieldNameMap["instance_type"] = "InstanceType"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.esx_host_info", fields, reflect.TypeOf(EsxHostInfo{}), fieldNameMap, validators)
-}
-
-func EsxNicInfoBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
-	fieldNameMap := make(map[string]string)
-	fields["ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["ip"] = "Ip"
-	fields["mac"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["mac"] = "Mac"
-	fields["vlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vlan"] = "Vlan"
-	fields["gateway"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["gateway"] = "Gateway"
-	fields["net-stack"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["net-stack"] = "NetStack"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.vmc.model.esx_nic_info", fields, reflect.TypeOf(EsxNicInfo{}), fieldNameMap, validators)
 }
 
 func FirewallRuleBindingType() vapiBindings_.BindingType {
@@ -6093,27 +5880,6 @@ func GlcmBundleBindingType() vapiBindings_.BindingType {
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.glcm_bundle", fields, reflect.TypeOf(GlcmBundle{}), fieldNameMap, validators)
 }
 
-func InstanceEntityCapacityBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
-	fieldNameMap := make(map[string]string)
-	fields["storage_capacity_gib"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["storage_capacity_gib"] = "StorageCapacityGib"
-	fields["memory_capacity_gib"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["memory_capacity_gib"] = "MemoryCapacityGib"
-	fields["total_number_of_cores"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["total_number_of_cores"] = "TotalNumberOfCores"
-	fields["number_of_ssds"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["number_of_ssds"] = "NumberOfSsds"
-	fields["cpu_capacity_ghz"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDoubleType())
-	fieldNameMap["cpu_capacity_ghz"] = "CpuCapacityGhz"
-	fields["number_of_sockets"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["number_of_sockets"] = "NumberOfSockets"
-	fields["esa_storage_capacity_gib"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
-	fieldNameMap["esa_storage_capacity_gib"] = "EsaStorageCapacityGib"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.vmc.model.instance_entity_capacity", fields, reflect.TypeOf(InstanceEntityCapacity{}), fieldNameMap, validators)
-}
-
 func InstanceProfileInfoBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
@@ -6130,18 +5896,16 @@ func InstanceProfileInfoBindingType() vapiBindings_.BindingType {
 func InstanceTypeBasicConfigBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["vsan_esa_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["vsan_esa_supported"] = "VsanEsaSupported"
+	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["instance_type"] = "InstanceType"
+	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["label"] = "Label"
 	fields["display_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["display_name"] = "DisplayName"
 	fields["description"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["description"] = "Description"
-	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["instance_type"] = "InstanceType"
-	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(InstanceEntityCapacityBindingType))
+	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EntityCapacityBindingType))
 	fieldNameMap["entity_capacity"] = "EntityCapacity"
-	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["label"] = "Label"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.instance_type_basic_config", fields, reflect.TypeOf(InstanceTypeBasicConfig{}), fieldNameMap, validators)
 }
@@ -6149,28 +5913,24 @@ func InstanceTypeBasicConfigBindingType() vapiBindings_.BindingType {
 func InstanceTypeConfigBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["vsan_esa_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["vsan_esa_supported"] = "VsanEsaSupported"
+	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["instance_type"] = "InstanceType"
+	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["label"] = "Label"
 	fields["display_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["display_name"] = "DisplayName"
 	fields["description"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["description"] = "Description"
-	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["instance_type"] = "InstanceType"
-	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(InstanceEntityCapacityBindingType))
+	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EntityCapacityBindingType))
 	fieldNameMap["entity_capacity"] = "EntityCapacity"
-	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["label"] = "Label"
-	fields["instance_provisioning_error_cause"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["instance_provisioning_error_cause"] = "InstanceProvisioningErrorCause"
-	fields["supported_cpu_cores"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})), reflect.TypeOf(map[string][]int64{})))
-	fieldNameMap["supported_cpu_cores"] = "SupportedCpuCores"
+	fields["hyper_threading_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["hyper_threading_supported"] = "HyperThreadingSupported"
 	fields["hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["hosts"] = "Hosts"
 	fields["cpu_cores"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["cpu_cores"] = "CpuCores"
-	fields["hyper_threading_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["hyper_threading_supported"] = "HyperThreadingSupported"
+	fields["instanceProvisioningErrorCause"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["instanceProvisioningErrorCause"] = "InstanceProvisioningErrorCause"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.instance_type_config", fields, reflect.TypeOf(InstanceTypeConfig{}), fieldNameMap, validators)
 }
@@ -6214,21 +5974,6 @@ func L2VpnBindingType() vapiBindings_.BindingType {
 	fieldNameMap["listener_ip"] = "ListenerIp"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.l2_vpn", fields, reflect.TypeOf(L2Vpn{}), fieldNameMap, validators)
-}
-
-func LinkRequestBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
-	fieldNameMap := make(map[string]string)
-	fields["tracking_task"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["tracking_task"] = "TrackingTask"
-	fields["expiration_date"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDateTimeType())
-	fieldNameMap["expiration_date"] = "ExpirationDate"
-	fields["template_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["template_url"] = "TemplateUrl"
-	fields["template_execution_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["template_execution_url"] = "TemplateExecutionUrl"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.vmc.model.link_request", fields, reflect.TypeOf(LinkRequest{}), fieldNameMap, validators)
 }
 
 func LogicalNetworkBindingType() vapiBindings_.BindingType {
@@ -6487,7 +6232,7 @@ func OrganizationBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -6495,7 +6240,7 @@ func OrganizationBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -6613,28 +6358,24 @@ func PopServiceInfoBindingType() vapiBindings_.BindingType {
 func PoweredByInstanceTypeConfigBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["vsan_esa_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["vsan_esa_supported"] = "VsanEsaSupported"
+	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["instance_type"] = "InstanceType"
+	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["label"] = "Label"
 	fields["display_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["display_name"] = "DisplayName"
 	fields["description"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["description"] = "Description"
-	fields["instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["instance_type"] = "InstanceType"
-	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(InstanceEntityCapacityBindingType))
+	fields["entity_capacity"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EntityCapacityBindingType))
 	fieldNameMap["entity_capacity"] = "EntityCapacity"
-	fields["label"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["label"] = "Label"
-	fields["instance_provisioning_error_cause"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["instance_provisioning_error_cause"] = "InstanceProvisioningErrorCause"
-	fields["supported_cpu_cores"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})), reflect.TypeOf(map[string][]int64{})))
-	fieldNameMap["supported_cpu_cores"] = "SupportedCpuCores"
+	fields["hyper_threading_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["hyper_threading_supported"] = "HyperThreadingSupported"
 	fields["hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["hosts"] = "Hosts"
 	fields["cpu_cores"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["cpu_cores"] = "CpuCores"
-	fields["hyper_threading_supported"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["hyper_threading_supported"] = "HyperThreadingSupported"
+	fields["instanceProvisioningErrorCause"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["instanceProvisioningErrorCause"] = "InstanceProvisioningErrorCause"
 	fields["powered_by_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["powered_by_id"] = "PoweredById"
 	fields["powered_by_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -6780,7 +6521,7 @@ func SddcBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -6788,7 +6529,7 @@ func SddcBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -6830,10 +6571,10 @@ func SddcConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap := make(map[string]string)
 	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
 	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
-	fields["account_link_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AccountLinkConfigBindingType))
-	fieldNameMap["account_link_config"] = "AccountLinkConfig"
 	fields["vpc_cidr"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vpc_cidr"] = "VpcCidr"
+	fields["host_instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["host_instance_type"] = "HostInstanceType"
 	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
 	fields["vxlan_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -6848,26 +6589,20 @@ func SddcConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["name"] = "Name"
 	fields["account_link_sddc_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(AccountLinkSddcConfigBindingType), reflect.TypeOf([]AccountLinkSddcConfig{})))
 	fieldNameMap["account_link_sddc_config"] = "AccountLinkSddcConfig"
-	fields["host_instance_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["host_instance_type"] = "HostInstanceType"
-	fields["billing_account_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["billing_account_id"] = "BillingAccountId"
-	fields["region"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["region"] = "Region"
 	fields["sddc_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_id"] = "SddcId"
-	fields["sddc_template_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["sddc_template_id"] = "SddcTemplateId"
+	fields["num_hosts"] = vapiBindings_.NewIntegerType()
+	fieldNameMap["num_hosts"] = "NumHosts"
 	fields["sddc_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_type"] = "SddcType"
-	fields["vsan_version"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vsan_version"] = "VsanVersion"
+	fields["account_link_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(AccountLinkConfigBindingType))
+	fieldNameMap["account_link_config"] = "AccountLinkConfig"
 	fields["provider"] = vapiBindings_.NewStringType()
 	fieldNameMap["provider"] = "Provider"
 	fields["sso_domain"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sso_domain"] = "SsoDomain"
-	fields["num_hosts"] = vapiBindings_.NewIntegerType()
-	fieldNameMap["num_hosts"] = "NumHosts"
+	fields["sddc_template_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["sddc_template_id"] = "SddcTemplateId"
 	fields["deployment_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["deployment_type"] = "DeploymentType"
 	var validators = []vapiBindings_.Validator{}
@@ -7000,48 +6735,42 @@ func SddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["vc_ip"] = "VcIp"
 	fields["mgmt_appliance_network_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["mgmt_appliance_network_name"] = "MgmtApplianceNetworkName"
+	fields["mgw_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["mgw_id"] = "MgwId"
 	fields["nsx_mgr_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_url"] = "NsxMgrUrl"
-	fields["vlcm_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["vlcm_enabled"] = "VlcmEnabled"
-	fields["nsx_cloud_audit_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["nsx_cloud_audit_password"] = "NsxCloudAuditPassword"
+	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
+	fields["esx_host_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["esx_host_subnet"] = "EsxHostSubnet"
 	fields["vc_csp_login_status"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_csp_login_status"] = "VcCspLoginStatus"
-	fields["nsx_cloud_admin_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["nsx_cloud_admin_password"] = "NsxCloudAdminPassword"
 	fields["management_ds"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["management_ds"] = "ManagementDs"
 	fields["nsx_api_public_endpoint_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_api_public_endpoint_url"] = "NsxApiPublicEndpointUrl"
 	fields["nfs_mode"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["nfs_mode"] = "NfsMode"
-	fields["cloud_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_password"] = "CloudPassword"
 	fields["sddc_networks"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["sddc_networks"] = "SddcNetworks"
 	fields["clusters"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(ClusterBindingType), reflect.TypeOf([]Cluster{})))
 	fieldNameMap["clusters"] = "Clusters"
-	fields["cloud_username"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_username"] = "CloudUsername"
 	fields["deployment_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["deployment_type"] = "DeploymentType"
-	fields["pop_agent_xeni_connection"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(PopAgentXeniConnectionBindingType))
-	fieldNameMap["pop_agent_xeni_connection"] = "PopAgentXeniConnection"
 	fields["nsx_mgr_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_management_ip"] = "NsxMgrManagementIp"
 	fields["nsx_cloud_audit"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_cloud_audit"] = "NsxCloudAudit"
 	fields["esx_cluster_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["esx_cluster_id"] = "EsxClusterId"
-	fields["mgw_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["mgw_id"] = "MgwId"
+	fields["vc_public_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["vc_public_ip"] = "VcPublicIp"
 	fields["vc_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_url"] = "VcUrl"
 	fields["esx_hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(AwsEsxHostBindingType), reflect.TypeOf([]AwsEsxHost{})))
 	fieldNameMap["esx_hosts"] = "EsxHosts"
-	fields["cloud_user_group"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["cloud_user_group"] = "CloudUserGroup"
+	fields["vc_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["vc_management_ip"] = "VcManagementIp"
 	fields["management_rp"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["management_rp"] = "ManagementRp"
 	fields["witness_availability_zone"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -7050,22 +6779,20 @@ func SddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["sddc_desired_state"] = "SddcDesiredState"
 	fields["sddc_size"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(SddcSizeBindingType))
 	fieldNameMap["sddc_size"] = "SddcSize"
-	fields["cvds_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["cvds_enabled"] = "CvdsEnabled"
+	fields["nsx_native_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
+	fieldNameMap["nsx_native_client"] = "NsxNativeClient"
 	fields["nsx_controller_ips"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["nsx_controller_ips"] = "NsxControllerIps"
 	fields["two_hostname_vc_deployment"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	fieldNameMap["two_hostname_vc_deployment"] = "TwoHostnameVcDeployment"
-	fields["esx_host_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["esx_host_subnet"] = "EsxHostSubnet"
 	fields["sso_domain"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sso_domain"] = "SsoDomain"
+	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
+	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
 	fields["region"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["region"] = "Region"
-	fields["dns_with_management_vm_private_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["dns_with_management_vm_private_ip"] = "DnsWithManagementVmPrivateIp"
-	fields["vc_public_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vc_public_ip"] = "VcPublicIp"
+	fields["outpost_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(OutpostConfigBindingType))
+	fieldNameMap["outpost_config"] = "OutpostConfig"
 	fields["psc_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["psc_ip"] = "PscIp"
 	fields["nsxt"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
@@ -7084,20 +6811,24 @@ func SddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["vc_containerized_permissions_enabled"] = "VcContainerizedPermissionsEnabled"
 	fields["custom_properties"] = vapiBindings_.NewOptionalType(vapiBindings_.NewMapType(vapiBindings_.NewStringType(), vapiBindings_.NewStringType(), reflect.TypeOf(map[string]string{})))
 	fieldNameMap["custom_properties"] = "CustomProperties"
+	fields["nsx_cloud_audit_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["nsx_cloud_audit_password"] = "NsxCloudAuditPassword"
+	fields["cloud_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_password"] = "CloudPassword"
 	fields["provider"] = vapiBindings_.NewStringType()
 	fieldNameMap["provider"] = "Provider"
-	fields["vc_management_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["vc_management_ip"] = "VcManagementIp"
-	fields["msft_license_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(MsftLicensingConfigBindingType))
-	fieldNameMap["msft_license_config"] = "MsftLicenseConfig"
-	fields["nsx_native_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
-	fieldNameMap["nsx_native_client"] = "NsxNativeClient"
+	fields["nsx_cloud_admin_password"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["nsx_cloud_admin_password"] = "NsxCloudAdminPassword"
+	fields["cloud_username"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_username"] = "CloudUsername"
+	fields["cvds_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["cvds_enabled"] = "CvdsEnabled"
 	fields["vc_instance_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_instance_id"] = "VcInstanceId"
-	fields["vc_oauth_client"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(CspOauthClientBindingType))
-	fieldNameMap["vc_oauth_client"] = "VcOauthClient"
-	fields["skip_creating_vxlan"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fieldNameMap["skip_creating_vxlan"] = "SkipCreatingVxlan"
+	fields["cloud_user_group"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fieldNameMap["cloud_user_group"] = "CloudUserGroup"
+	fields["vlcm_enabled"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["vlcm_enabled"] = "VlcmEnabled"
 	fields["sddc_manifest"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(SddcManifestBindingType))
 	fieldNameMap["sddc_manifest"] = "SddcManifest"
 	fields["vxlan_subnet"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
@@ -7106,12 +6837,14 @@ func SddcResourceConfigBindingType() vapiBindings_.BindingType {
 	fieldNameMap["sddc_security"] = "SddcSecurity"
 	fields["sddc_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["sddc_id"] = "SddcId"
-	fields["outpost_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(OutpostConfigBindingType))
-	fieldNameMap["outpost_config"] = "OutpostConfig"
+	fields["pop_agent_xeni_connection"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(PopAgentXeniConnectionBindingType))
+	fieldNameMap["pop_agent_xeni_connection"] = "PopAgentXeniConnection"
 	fields["nsx_mgr_login_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_mgr_login_url"] = "NsxMgrLoginUrl"
 	fields["vc_break_glass_url"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["vc_break_glass_url"] = "VcBreakGlassUrl"
+	fields["dns_with_management_vm_private_ip"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fieldNameMap["dns_with_management_vm_private_ip"] = "DnsWithManagementVmPrivateIp"
 	fields["nsx_cloud_admin"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["nsx_cloud_admin"] = "NsxCloudAdmin"
 	fields["nsxt_addons"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(NsxtAddonsBindingType))
@@ -7162,7 +6895,7 @@ func SddcTemplateBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -7170,7 +6903,7 @@ func SddcTemplateBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -7214,7 +6947,7 @@ func ServiceQuotaRequestBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -7222,7 +6955,7 @@ func ServiceQuotaRequestBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -7447,17 +7180,6 @@ func SupportWindowIdBindingType() vapiBindings_.BindingType {
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.support_window_id", fields, reflect.TypeOf(SupportWindowId{}), fieldNameMap, validators)
 }
 
-func TagBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
-	fieldNameMap := make(map[string]string)
-	fields["key"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["key"] = "Key"
-	fields["value"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
-	fieldNameMap["value"] = "Value"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.vmc.model.tag", fields, reflect.TypeOf(Tag{}), fieldNameMap, validators)
-}
-
 func TaskBindingType() vapiBindings_.BindingType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
@@ -7465,7 +7187,7 @@ func TaskBindingType() vapiBindings_.BindingType {
 	fieldNameMap["updated"] = "Updated"
 	fields["user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
 	fields["created"] = vapiBindings_.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
@@ -7473,7 +7195,7 @@ func TaskBindingType() vapiBindings_.BindingType {
 	fieldNameMap["version"] = "Version"
 	fields["updated_by_user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["user_name"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["user_name"] = vapiBindings_.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
 	fields["id"] = vapiBindings_.NewStringType()
 	fieldNameMap["id"] = "Id"
@@ -7868,6 +7590,15 @@ func VsanConfigConstraintsBindingType() vapiBindings_.BindingType {
 	fieldNameMap["num_hosts"] = "NumHosts"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("com.vmware.vmc.model.vsan_config_constraints", fields, reflect.TypeOf(VsanConfigConstraints{}), fieldNameMap, validators)
+}
+
+func VsanDiskgroupMappingBindingType() vapiBindings_.BindingType {
+	fields := make(map[string]vapiBindings_.BindingType)
+	fieldNameMap := make(map[string]string)
+	fields["mapping_type"] = vapiBindings_.NewStringType()
+	fieldNameMap["mapping_type"] = "MappingType"
+	var validators = []vapiBindings_.Validator{}
+	return vapiBindings_.NewStructType("com.vmware.vmc.model.vsan_diskgroup_mapping", fields, reflect.TypeOf(VsanDiskgroupMapping{}), fieldNameMap, validators)
 }
 
 func VsanEncryptionConfigBindingType() vapiBindings_.BindingType {

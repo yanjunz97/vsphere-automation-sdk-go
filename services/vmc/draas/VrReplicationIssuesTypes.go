@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright © 2019-2021 VMware, Inc. All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -11,52 +11,52 @@
 package draas
 
 import (
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
-	vapiProtocol_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
-	vmcDraasModel "github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/data"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
+	"github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
 	"reflect"
 )
 
-func vrReplicationIssuesGetInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func vrReplicationIssuesGetInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func VrReplicationIssuesGetOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewListType(vapiBindings_.NewReferenceType(vmcDraasModel.HmsReplicationIssueInfoBindingType), reflect.TypeOf([]vmcDraasModel.HmsReplicationIssueInfo{}))
+func vrReplicationIssuesGetOutputType() bindings.BindingType {
+	return bindings.NewListType(bindings.NewReferenceType(model.HmsReplicationIssueInfoBindingType), reflect.TypeOf([]model.HmsReplicationIssueInfo{}))
 }
 
-func vrReplicationIssuesGetRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func vrReplicationIssuesGetRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,

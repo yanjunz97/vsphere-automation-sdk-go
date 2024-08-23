@@ -14,7 +14,6 @@ import (
 	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
 	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
 	vapiProtocol_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
-	vmcModel "github.com/vmware/vsphere-automation-sdk-go/services/vmc/model"
 	"reflect"
 )
 
@@ -28,7 +27,7 @@ func accountLinkGetInputType() vapiBindings_.StructType {
 }
 
 func AccountLinkGetOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(vmcModel.LinkRequestBindingType)
+	return vapiBindings_.NewVoidType()
 }
 
 func accountLinkGetRestMetadata() vapiProtocol_.OperationRestMetadata {
@@ -62,7 +61,7 @@ func accountLinkGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 		"/vmc/api/orgs/{org}/account-link",
 		"",
 		resultHeaders,
-		200,
+		204,
 		"",
 		errorHeaders,
 		map[string]int{"com.vmware.vapi.std.errors.error": 500})

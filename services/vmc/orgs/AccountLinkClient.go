@@ -13,7 +13,6 @@ import (
 	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
 	vapiCore_ "github.com/vmware/vsphere-automation-sdk-go/runtime/core"
 	vapiProtocolClient_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol/client"
-	vmcModel "github.com/vmware/vsphere-automation-sdk-go/services/vmc/model"
 )
 
 const _ = vapiCore_.SupportedByRuntimeVersion2
@@ -23,10 +22,9 @@ type AccountLinkClient interface {
 	// Gets a link that can be used on a customer's account to start the linking process.
 	//
 	// @param orgParam Organization identifier (required)
-	// @return com.vmware.vmc.model.LinkRequest
 	//
 	// @throws Error  Generic Error
-	Get(orgParam string) (vmcModel.LinkRequest, error)
+	Get(orgParam string) error
 }
 
 type accountLinkClient struct {
@@ -54,7 +52,7 @@ func (aIface *accountLinkClient) GetErrorBindingType(errorName string) vapiBindi
 	return vapiStdErrors_.ERROR_BINDINGS_MAP[errorName]
 }
 
-func (aIface *accountLinkClient) Get(orgParam string) (vmcModel.LinkRequest, error) {
+func (aIface *accountLinkClient) Get(orgParam string) error {
 	typeConverter := aIface.connector.TypeConverter()
 	executionContext := aIface.connector.NewExecutionContext()
 	operationRestMetaData := accountLinkGetRestMetadata()
@@ -65,23 +63,17 @@ func (aIface *accountLinkClient) Get(orgParam string) (vmcModel.LinkRequest, err
 	sv.AddStructField("Org", orgParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
-		var emptyOutput vmcModel.LinkRequest
-		return emptyOutput, vapiBindings_.VAPIerrorsToError(inputError)
+		return vapiBindings_.VAPIerrorsToError(inputError)
 	}
 
 	methodResult := aIface.connector.GetApiProvider().Invoke("com.vmware.vmc.orgs.account_link", "get", inputDataValue, executionContext)
-	var emptyOutput vmcModel.LinkRequest
 	if methodResult.IsSuccess() {
-		output, errorInOutput := typeConverter.ConvertToGolang(methodResult.Output(), AccountLinkGetOutputType())
-		if errorInOutput != nil {
-			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInOutput)
-		}
-		return output.(vmcModel.LinkRequest), nil
+		return nil
 	} else {
 		methodError, errorInError := typeConverter.ConvertToGolang(methodResult.Error(), aIface.GetErrorBindingType(methodResult.Error().Name()))
 		if errorInError != nil {
-			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInError)
+			return vapiBindings_.VAPIerrorsToError(errorInError)
 		}
-		return emptyOutput, methodError.(error)
+		return methodError.(error)
 	}
 }

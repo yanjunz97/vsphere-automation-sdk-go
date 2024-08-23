@@ -11,9 +11,9 @@
 package model
 
 import (
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
-	vapiLog_ "github.com/vmware/vsphere-automation-sdk-go/runtime/log"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/data"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/log"
 	"reflect"
 	"time"
 )
@@ -33,16 +33,17 @@ type AbstractEntity struct {
 	Id string
 }
 
-func (s *AbstractEntity) GetType__() vapiBindings_.BindingType {
+func (s *AbstractEntity) GetType__() bindings.BindingType {
 	return AbstractEntityBindingType()
 }
 
-func (s *AbstractEntity) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *AbstractEntity) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for AbstractEntity._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for AbstractEntity._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -66,16 +67,17 @@ type AwsEvent struct {
 // This value should be assigned to the property which is used to discriminate the actual type used in the polymorphic context.
 const AwsEvent__TYPE_IDENTIFIER = "AwsEvent"
 
-func (s *AwsEvent) GetType__() vapiBindings_.BindingType {
+func (s *AwsEvent) GetType__() bindings.BindingType {
 	return AwsEventBindingType()
 }
 
-func (s *AwsEvent) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *AwsEvent) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for AwsEvent._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for AwsEvent._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -101,16 +103,17 @@ const EdrsClusterInfo_STATUS_KEY_MIN_HOSTS = "skyscraper.autoscaler.elastic.drs.
 const EdrsClusterInfo_STATUS_KEY_MAX_HOSTS = "skyscraper.autoscaler.elastic.drs.max.hosts"
 const EdrsClusterInfo_STATUS_KEY_FAILED_HOSTS = "skyscraper.autoscaler.elastic.drs.failed.hosts"
 
-func (s *EdrsClusterInfo) GetType__() vapiBindings_.BindingType {
+func (s *EdrsClusterInfo) GetType__() bindings.BindingType {
 	return EdrsClusterInfoBindingType()
 }
 
-func (s *EdrsClusterInfo) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *EdrsClusterInfo) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EdrsClusterInfo._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for EdrsClusterInfo._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -140,16 +143,17 @@ const EdrsPolicy_POLICY_TYPE_PERFORMANCE = "performance"
 const EdrsPolicy_POLICY_TYPE_STORAGE_SCALEUP = "storage-scaleup"
 const EdrsPolicy_POLICY_TYPE_RAPID_SCALEUP = "rapid-scaleup"
 
-func (s *EdrsPolicy) GetType__() vapiBindings_.BindingType {
+func (s *EdrsPolicy) GetType__() bindings.BindingType {
 	return EdrsPolicyBindingType()
 }
 
-func (s *EdrsPolicy) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *EdrsPolicy) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EdrsPolicy._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for EdrsPolicy._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -160,16 +164,17 @@ type EdrsPolicyOptionsOverrides struct {
 	ScaleUpHostIncrement *int64
 }
 
-func (s *EdrsPolicyOptionsOverrides) GetType__() vapiBindings_.BindingType {
+func (s *EdrsPolicyOptionsOverrides) GetType__() bindings.BindingType {
 	return EdrsPolicyOptionsOverridesBindingType()
 }
 
-func (s *EdrsPolicyOptionsOverrides) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *EdrsPolicyOptionsOverrides) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EdrsPolicyOptionsOverrides._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for EdrsPolicyOptionsOverrides._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -202,16 +207,17 @@ const EdrsPolicySpec_POLICY_TYPE_PERFORMANCE = "performance"
 const EdrsPolicySpec_POLICY_TYPE_STORAGE_SCALEUP = "storage-scaleup"
 const EdrsPolicySpec_POLICY_TYPE_RAPID_SCALEUP = "rapid-scaleup"
 
-func (s *EdrsPolicySpec) GetType__() vapiBindings_.BindingType {
+func (s *EdrsPolicySpec) GetType__() bindings.BindingType {
 	return EdrsPolicySpecBindingType()
 }
 
-func (s *EdrsPolicySpec) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *EdrsPolicySpec) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EdrsPolicySpec._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for EdrsPolicySpec._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -223,16 +229,17 @@ type EdrsProvisioningSpec struct {
 	Policies []EdrsPolicySpec
 }
 
-func (s *EdrsProvisioningSpec) GetType__() vapiBindings_.BindingType {
+func (s *EdrsProvisioningSpec) GetType__() bindings.BindingType {
 	return EdrsProvisioningSpecBindingType()
 }
 
-func (s *EdrsProvisioningSpec) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *EdrsProvisioningSpec) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for EdrsProvisioningSpec._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for EdrsProvisioningSpec._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -251,16 +258,17 @@ type ErrorResponse struct {
 	ErrorMessages []string
 }
 
-func (s *ErrorResponse) GetType__() vapiBindings_.BindingType {
+func (s *ErrorResponse) GetType__() bindings.BindingType {
 	return ErrorResponseBindingType()
 }
 
-func (s *ErrorResponse) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *ErrorResponse) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for ErrorResponse._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for ErrorResponse._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -274,16 +282,17 @@ type RemediationClusterInfo struct {
 	RemediationPolicy RemediationPolicy
 }
 
-func (s *RemediationClusterInfo) GetType__() vapiBindings_.BindingType {
+func (s *RemediationClusterInfo) GetType__() bindings.BindingType {
 	return RemediationClusterInfoBindingType()
 }
 
-func (s *RemediationClusterInfo) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *RemediationClusterInfo) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for RemediationClusterInfo._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for RemediationClusterInfo._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -294,16 +303,17 @@ type RemediationPolicy struct {
 	AutoRemediationEnabled bool
 }
 
-func (s *RemediationPolicy) GetType__() vapiBindings_.BindingType {
+func (s *RemediationPolicy) GetType__() bindings.BindingType {
 	return RemediationPolicyBindingType()
 }
 
-func (s *RemediationPolicy) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *RemediationPolicy) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for RemediationPolicy._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for RemediationPolicy._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -314,16 +324,17 @@ type RemediationPolicyPatch struct {
 	AutoRemediationEnabled bool
 }
 
-func (s *RemediationPolicyPatch) GetType__() vapiBindings_.BindingType {
+func (s *RemediationPolicyPatch) GetType__() bindings.BindingType {
 	return RemediationPolicyPatchBindingType()
 }
 
-func (s *RemediationPolicyPatch) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *RemediationPolicyPatch) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for RemediationPolicyPatch._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for RemediationPolicyPatch._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -345,16 +356,17 @@ type ServiceError struct {
 	LocalizedMessage *string
 }
 
-func (s *ServiceError) GetType__() vapiBindings_.BindingType {
+func (s *ServiceError) GetType__() bindings.BindingType {
 	return ServiceErrorBindingType()
 }
 
-func (s *ServiceError) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *ServiceError) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for ServiceError._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for ServiceError._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -396,7 +408,7 @@ type Task struct {
 	ProgressPercent *int64
 	// Estimated remaining time in minute of the task execution, < 0 means no estimation for the task. format: int32
 	EstimatedRemainingMinutes *int64
-	Params                    *vapiData_.StructValue
+	Params                    *data.StructValue
 	EndTime                   *time.Time
 	// The current in progress phase ID in the task execution, if none in progress, empty string returned.
 	PhaseInProgress *string
@@ -411,16 +423,17 @@ const Task_STATUS_FINISHED = "FINISHED"
 const Task_STATUS_FAILED = "FAILED"
 const Task_STATUS_CANCELED = "CANCELED"
 
-func (s *Task) GetType__() vapiBindings_.BindingType {
+func (s *Task) GetType__() bindings.BindingType {
 	return TaskBindingType()
 }
 
-func (s *Task) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *Task) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for Task._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for Task._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
@@ -436,259 +449,260 @@ type TaskProgressPhase struct {
 	ProgressPercent int64
 }
 
-func (s *TaskProgressPhase) GetType__() vapiBindings_.BindingType {
+func (s *TaskProgressPhase) GetType__() bindings.BindingType {
 	return TaskProgressPhaseBindingType()
 }
 
-func (s *TaskProgressPhase) GetDataValue__() (vapiData_.DataValue, []error) {
-	typeConverter := vapiBindings_.NewTypeConverter()
+func (s *TaskProgressPhase) GetDataValue__() (data.DataValue, []error) {
+	typeConverter := bindings.NewTypeConverter()
+	typeConverter.SetMode(bindings.JSONRPC)
 	dataVal, err := typeConverter.ConvertToVapi(s, s.GetType__())
 	if err != nil {
-		vapiLog_.Errorf("Error in ConvertToVapi for TaskProgressPhase._GetDataValue method - %s",
-			vapiBindings_.VAPIerrorsToError(err).Error())
+		log.Errorf("Error in ConvertToVapi for TaskProgressPhase._GetDataValue method - %s",
+			bindings.VAPIerrorsToError(err).Error())
 		return nil, err
 	}
 	return dataVal, nil
 }
 
-func AbstractEntityBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func AbstractEntityBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["updated"] = vapiBindings_.NewDateTimeType()
+	fields["updated"] = bindings.NewDateTimeType()
 	fieldNameMap["updated"] = "Updated"
-	fields["user_id"] = vapiBindings_.NewStringType()
+	fields["user_id"] = bindings.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
+	fields["updated_by_user_id"] = bindings.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
-	fields["updated_by_user_name"] = vapiBindings_.NewStringType()
+	fields["updated_by_user_name"] = bindings.NewStringType()
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["created"] = vapiBindings_.NewDateTimeType()
+	fields["created"] = bindings.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
-	fields["user_name"] = vapiBindings_.NewStringType()
+	fields["user_name"] = bindings.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
-	fields["id"] = vapiBindings_.NewStringType()
+	fields["id"] = bindings.NewStringType()
 	fieldNameMap["id"] = "Id"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.abstract_entity", fields, reflect.TypeOf(AbstractEntity{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.abstract_entity", fields, reflect.TypeOf(AbstractEntity{}), fieldNameMap, validators)
 }
 
-func AwsEventBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func AwsEventBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["instance_id"] = vapiBindings_.NewStringType()
+	fields["instance_id"] = bindings.NewStringType()
 	fieldNameMap["instance_id"] = "InstanceId"
-	fields["start_time"] = vapiBindings_.NewDateTimeType()
+	fields["start_time"] = bindings.NewDateTimeType()
 	fieldNameMap["start_time"] = "StartTime"
-	fields["type"] = vapiBindings_.NewStringType()
+	fields["type"] = bindings.NewStringType()
 	fieldNameMap["type"] = "Type_"
-	fields["account_id"] = vapiBindings_.NewStringType()
+	fields["account_id"] = bindings.NewStringType()
 	fieldNameMap["account_id"] = "AccountId"
-	fields["description"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["description"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["description"] = "Description"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.aws_event", fields, reflect.TypeOf(AwsEvent{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.aws_event", fields, reflect.TypeOf(AwsEvent{}), fieldNameMap, validators)
 }
 
-func EdrsClusterInfoBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func EdrsClusterInfoBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["status_key"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["status_key"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["status_key"] = "StatusKey"
-	fields["cluster_id"] = vapiBindings_.NewStringType()
+	fields["cluster_id"] = bindings.NewStringType()
 	fieldNameMap["cluster_id"] = "ClusterId"
-	fields["status_message"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["status_message"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["status_message"] = "StatusMessage"
-	fields["edrs_policy"] = vapiBindings_.NewReferenceType(EdrsPolicyBindingType)
+	fields["edrs_policy"] = bindings.NewReferenceType(EdrsPolicyBindingType)
 	fieldNameMap["edrs_policy"] = "EdrsPolicy"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.edrs_cluster_info", fields, reflect.TypeOf(EdrsClusterInfo{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.edrs_cluster_info", fields, reflect.TypeOf(EdrsClusterInfo{}), fieldNameMap, validators)
 }
 
-func EdrsPolicyBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func EdrsPolicyBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["enable_edrs"] = vapiBindings_.NewBooleanType()
+	fields["enable_edrs"] = bindings.NewBooleanType()
 	fieldNameMap["enable_edrs"] = "EnableEdrs"
-	fields["edrs_policy_options_overrides"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EdrsPolicyOptionsOverridesBindingType))
+	fields["edrs_policy_options_overrides"] = bindings.NewOptionalType(bindings.NewReferenceType(EdrsPolicyOptionsOverridesBindingType))
 	fieldNameMap["edrs_policy_options_overrides"] = "EdrsPolicyOptionsOverrides"
-	fields["min_hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
+	fields["min_hosts"] = bindings.NewOptionalType(bindings.NewIntegerType())
 	fieldNameMap["min_hosts"] = "MinHosts"
-	fields["policy_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["policy_type"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["policy_type"] = "PolicyType"
-	fields["max_hosts"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
+	fields["max_hosts"] = bindings.NewOptionalType(bindings.NewIntegerType())
 	fieldNameMap["max_hosts"] = "MaxHosts"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.edrs_policy", fields, reflect.TypeOf(EdrsPolicy{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.edrs_policy", fields, reflect.TypeOf(EdrsPolicy{}), fieldNameMap, validators)
 }
 
-func EdrsPolicyOptionsOverridesBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func EdrsPolicyOptionsOverridesBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["scale_up_host_increment"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
+	fields["scale_up_host_increment"] = bindings.NewOptionalType(bindings.NewIntegerType())
 	fieldNameMap["scale_up_host_increment"] = "ScaleUpHostIncrement"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.edrs_policy_options_overrides", fields, reflect.TypeOf(EdrsPolicyOptionsOverrides{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.edrs_policy_options_overrides", fields, reflect.TypeOf(EdrsPolicyOptionsOverrides{}), fieldNameMap, validators)
 }
 
-func EdrsPolicySpecBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func EdrsPolicySpecBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["policy_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["policy_type"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["policy_type"] = "PolicyType"
-	fields["cluster_eligible_for_policy"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fields["cluster_eligible_for_policy"] = bindings.NewOptionalType(bindings.NewBooleanType())
 	fieldNameMap["cluster_eligible_for_policy"] = "ClusterEligibleForPolicy"
-	fields["configurable_scaleup_increment"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fields["configurable_scaleup_increment"] = bindings.NewOptionalType(bindings.NewBooleanType())
 	fieldNameMap["configurable_scaleup_increment"] = "ConfigurableScaleupIncrement"
-	fields["min_max_host_range"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
+	fields["min_max_host_range"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["min_max_host_range"] = "MinMaxHostRange"
-	fields["scaleup_host_increment_range"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewIntegerType(), reflect.TypeOf([]int64{})))
+	fields["scaleup_host_increment_range"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewIntegerType(), reflect.TypeOf([]int64{})))
 	fieldNameMap["scaleup_host_increment_range"] = "ScaleupHostIncrementRange"
-	fields["configurable"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
+	fields["configurable"] = bindings.NewOptionalType(bindings.NewBooleanType())
 	fieldNameMap["configurable"] = "Configurable"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.edrs_policy_spec", fields, reflect.TypeOf(EdrsPolicySpec{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.edrs_policy_spec", fields, reflect.TypeOf(EdrsPolicySpec{}), fieldNameMap, validators)
 }
 
-func EdrsProvisioningSpecBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func EdrsProvisioningSpecBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["edrs_cluster_info"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(EdrsClusterInfoBindingType))
+	fields["edrs_cluster_info"] = bindings.NewOptionalType(bindings.NewReferenceType(EdrsClusterInfoBindingType))
 	fieldNameMap["edrs_cluster_info"] = "EdrsClusterInfo"
-	fields["policies"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(EdrsPolicySpecBindingType), reflect.TypeOf([]EdrsPolicySpec{})))
+	fields["policies"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewReferenceType(EdrsPolicySpecBindingType), reflect.TypeOf([]EdrsPolicySpec{})))
 	fieldNameMap["policies"] = "Policies"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.edrs_provisioning_spec", fields, reflect.TypeOf(EdrsProvisioningSpec{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.edrs_provisioning_spec", fields, reflect.TypeOf(EdrsProvisioningSpec{}), fieldNameMap, validators)
 }
 
-func ErrorResponseBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func ErrorResponseBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["status"] = vapiBindings_.NewIntegerType()
+	fields["status"] = bindings.NewIntegerType()
 	fieldNameMap["status"] = "Status"
-	fields["path"] = vapiBindings_.NewStringType()
+	fields["path"] = bindings.NewStringType()
 	fieldNameMap["path"] = "Path"
-	fields["retryable"] = vapiBindings_.NewBooleanType()
+	fields["retryable"] = bindings.NewBooleanType()
 	fieldNameMap["retryable"] = "Retryable"
-	fields["error_code"] = vapiBindings_.NewStringType()
+	fields["error_code"] = bindings.NewStringType()
 	fieldNameMap["error_code"] = "ErrorCode"
-	fields["error_messages"] = vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{}))
+	fields["error_messages"] = bindings.NewListType(bindings.NewStringType(), reflect.TypeOf([]string{}))
 	fieldNameMap["error_messages"] = "ErrorMessages"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.error_response", fields, reflect.TypeOf(ErrorResponse{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.error_response", fields, reflect.TypeOf(ErrorResponse{}), fieldNameMap, validators)
 }
 
-func RemediationClusterInfoBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func RemediationClusterInfoBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["cluster_name"] = vapiBindings_.NewStringType()
+	fields["cluster_name"] = bindings.NewStringType()
 	fieldNameMap["cluster_name"] = "ClusterName"
-	fields["cluster_id"] = vapiBindings_.NewStringType()
+	fields["cluster_id"] = bindings.NewStringType()
 	fieldNameMap["cluster_id"] = "ClusterId"
-	fields["remediation_policy"] = vapiBindings_.NewReferenceType(RemediationPolicyBindingType)
+	fields["remediation_policy"] = bindings.NewReferenceType(RemediationPolicyBindingType)
 	fieldNameMap["remediation_policy"] = "RemediationPolicy"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.remediation_cluster_info", fields, reflect.TypeOf(RemediationClusterInfo{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.remediation_cluster_info", fields, reflect.TypeOf(RemediationClusterInfo{}), fieldNameMap, validators)
 }
 
-func RemediationPolicyBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func RemediationPolicyBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["auto_remediation_enabled"] = vapiBindings_.NewBooleanType()
+	fields["auto_remediation_enabled"] = bindings.NewBooleanType()
 	fieldNameMap["auto_remediation_enabled"] = "AutoRemediationEnabled"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.remediation_policy", fields, reflect.TypeOf(RemediationPolicy{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.remediation_policy", fields, reflect.TypeOf(RemediationPolicy{}), fieldNameMap, validators)
 }
 
-func RemediationPolicyPatchBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func RemediationPolicyPatchBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["auto_remediation_enabled"] = vapiBindings_.NewBooleanType()
+	fields["auto_remediation_enabled"] = bindings.NewBooleanType()
 	fieldNameMap["auto_remediation_enabled"] = "AutoRemediationEnabled"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.remediation_policy_patch", fields, reflect.TypeOf(RemediationPolicyPatch{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.remediation_policy_patch", fields, reflect.TypeOf(RemediationPolicyPatch{}), fieldNameMap, validators)
 }
 
-func ServiceErrorBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func ServiceErrorBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["original_service"] = vapiBindings_.NewStringType()
+	fields["original_service"] = bindings.NewStringType()
 	fieldNameMap["original_service"] = "OriginalService"
-	fields["params"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewStringType(), reflect.TypeOf([]string{})))
+	fields["params"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewStringType(), reflect.TypeOf([]string{})))
 	fieldNameMap["params"] = "Params"
-	fields["default_message"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["default_message"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["default_message"] = "DefaultMessage"
-	fields["original_service_error_code"] = vapiBindings_.NewStringType()
+	fields["original_service_error_code"] = bindings.NewStringType()
 	fieldNameMap["original_service_error_code"] = "OriginalServiceErrorCode"
-	fields["error_code"] = vapiBindings_.NewStringType()
+	fields["error_code"] = bindings.NewStringType()
 	fieldNameMap["error_code"] = "ErrorCode"
-	fields["localized_message"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["localized_message"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["localized_message"] = "LocalizedMessage"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.service_error", fields, reflect.TypeOf(ServiceError{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.service_error", fields, reflect.TypeOf(ServiceError{}), fieldNameMap, validators)
 }
 
-func TaskBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func TaskBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["updated"] = vapiBindings_.NewDateTimeType()
+	fields["updated"] = bindings.NewDateTimeType()
 	fieldNameMap["updated"] = "Updated"
-	fields["user_id"] = vapiBindings_.NewStringType()
+	fields["user_id"] = bindings.NewStringType()
 	fieldNameMap["user_id"] = "UserId"
-	fields["updated_by_user_id"] = vapiBindings_.NewStringType()
+	fields["updated_by_user_id"] = bindings.NewStringType()
 	fieldNameMap["updated_by_user_id"] = "UpdatedByUserId"
-	fields["updated_by_user_name"] = vapiBindings_.NewStringType()
+	fields["updated_by_user_name"] = bindings.NewStringType()
 	fieldNameMap["updated_by_user_name"] = "UpdatedByUserName"
-	fields["created"] = vapiBindings_.NewDateTimeType()
+	fields["created"] = bindings.NewDateTimeType()
 	fieldNameMap["created"] = "Created"
-	fields["user_name"] = vapiBindings_.NewStringType()
+	fields["user_name"] = bindings.NewStringType()
 	fieldNameMap["user_name"] = "UserName"
-	fields["id"] = vapiBindings_.NewStringType()
+	fields["id"] = bindings.NewStringType()
 	fieldNameMap["id"] = "Id"
-	fields["status"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["status"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["status"] = "Status"
-	fields["resource_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["resource_id"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["resource_id"] = "ResourceId"
-	fields["start_time"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDateTimeType())
+	fields["start_time"] = bindings.NewOptionalType(bindings.NewDateTimeType())
 	fieldNameMap["start_time"] = "StartTime"
-	fields["service_errors"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(ServiceErrorBindingType), reflect.TypeOf([]ServiceError{})))
+	fields["service_errors"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewReferenceType(ServiceErrorBindingType), reflect.TypeOf([]ServiceError{})))
 	fieldNameMap["service_errors"] = "ServiceErrors"
-	fields["sub_status"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["sub_status"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["sub_status"] = "SubStatus"
-	fields["task_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["task_type"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["task_type"] = "TaskType"
-	fields["task_progress_phases"] = vapiBindings_.NewOptionalType(vapiBindings_.NewListType(vapiBindings_.NewReferenceType(TaskProgressPhaseBindingType), reflect.TypeOf([]TaskProgressPhase{})))
+	fields["task_progress_phases"] = bindings.NewOptionalType(bindings.NewListType(bindings.NewReferenceType(TaskProgressPhaseBindingType), reflect.TypeOf([]TaskProgressPhase{})))
 	fieldNameMap["task_progress_phases"] = "TaskProgressPhases"
-	fields["error_message"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["error_message"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["error_message"] = "ErrorMessage"
-	fields["org_id"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["org_id"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["org_id"] = "OrgId"
-	fields["progress_percent"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
+	fields["progress_percent"] = bindings.NewOptionalType(bindings.NewIntegerType())
 	fieldNameMap["progress_percent"] = "ProgressPercent"
-	fields["estimated_remaining_minutes"] = vapiBindings_.NewOptionalType(vapiBindings_.NewIntegerType())
+	fields["estimated_remaining_minutes"] = bindings.NewOptionalType(bindings.NewIntegerType())
 	fieldNameMap["estimated_remaining_minutes"] = "EstimatedRemainingMinutes"
-	fields["params"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDynamicStructType(nil))
+	fields["params"] = bindings.NewOptionalType(bindings.NewDynamicStructType(nil, bindings.JSONRPC))
 	fieldNameMap["params"] = "Params"
-	fields["end_time"] = vapiBindings_.NewOptionalType(vapiBindings_.NewDateTimeType())
+	fields["end_time"] = bindings.NewOptionalType(bindings.NewDateTimeType())
 	fieldNameMap["end_time"] = "EndTime"
-	fields["phase_in_progress"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["phase_in_progress"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["phase_in_progress"] = "PhaseInProgress"
-	fields["task_version"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["task_version"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["task_version"] = "TaskVersion"
-	fields["resource_type"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
+	fields["resource_type"] = bindings.NewOptionalType(bindings.NewStringType())
 	fieldNameMap["resource_type"] = "ResourceType"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.task", fields, reflect.TypeOf(Task{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.task", fields, reflect.TypeOf(Task{}), fieldNameMap, validators)
 }
 
-func TaskProgressPhaseBindingType() vapiBindings_.BindingType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func TaskProgressPhaseBindingType() bindings.BindingType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["id"] = vapiBindings_.NewStringType()
+	fields["id"] = bindings.NewStringType()
 	fieldNameMap["id"] = "Id"
-	fields["name"] = vapiBindings_.NewStringType()
+	fields["name"] = bindings.NewStringType()
 	fieldNameMap["name"] = "Name"
-	fields["progress_percent"] = vapiBindings_.NewIntegerType()
+	fields["progress_percent"] = bindings.NewIntegerType()
 	fieldNameMap["progress_percent"] = "ProgressPercent"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("com.vmware.model.task_progress_phase", fields, reflect.TypeOf(TaskProgressPhase{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("com.vmware.model.task_progress_phase", fields, reflect.TypeOf(TaskProgressPhase{}), fieldNameMap, validators)
 }

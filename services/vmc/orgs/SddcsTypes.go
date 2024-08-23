@@ -222,10 +222,8 @@ func sddcsListInputType() vapiBindings_.StructType {
 	fieldNameMap := make(map[string]string)
 	fields["org"] = vapiBindings_.NewStringType()
 	fields["include_deleted"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fields["filter"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["include_deleted"] = "IncludeDeleted"
-	fieldNameMap["filter"] = "Filter"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
 }
@@ -245,16 +243,12 @@ func sddcsListRestMetadata() vapiProtocol_.OperationRestMetadata {
 	bodyFieldsMap := map[string]string{}
 	fields["org"] = vapiBindings_.NewStringType()
 	fields["include_deleted"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
-	fields["filter"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["include_deleted"] = "IncludeDeleted"
-	fieldNameMap["filter"] = "Filter"
-	paramsTypeMap["filter"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	paramsTypeMap["org"] = vapiBindings_.NewStringType()
 	paramsTypeMap["include_deleted"] = vapiBindings_.NewOptionalType(vapiBindings_.NewBooleanType())
 	paramsTypeMap["org"] = vapiBindings_.NewStringType()
 	pathParams["org"] = "org"
-	queryParams["filter"] = "$filter"
 	queryParams["include_deleted"] = "includeDeleted"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}

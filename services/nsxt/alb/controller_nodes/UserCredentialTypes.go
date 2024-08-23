@@ -1,4 +1,5 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright (c) 2019-2024 Broadcom. All Rights Reserved.
+// The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -58,7 +59,7 @@ func userCredentialCreateRestMetadata() vapiProtocol_.OperationRestMetadata {
 		"a_LB_controller_user_credential",
 		"POST",
 		"/policy/api/v1/alb/controller-nodes/user-credential",
-		"",
+		"application/json",
 		resultHeaders,
 		201,
 		"",
@@ -112,7 +113,7 @@ func userCredentialUpdateRestMetadata() vapiProtocol_.OperationRestMetadata {
 		"a_LB_controller_user_credential",
 		"PUT",
 		"/policy/api/v1/alb/controller-nodes/user-credential",
-		"",
+		"application/json",
 		resultHeaders,
 		200,
 		"",

@@ -11,51 +11,51 @@
 package clusters
 
 import (
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
-	vapiProtocol_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/data"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
 	"github.com/vmware/vsphere-automation-sdk-go/services/vmc/autoscaler/model"
 	"reflect"
 )
 
-func edrsProvisioningSpecGetInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func edrsProvisioningSpecGetInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func EdrsProvisioningSpecGetOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(model.EdrsProvisioningSpecBindingType)
+func edrsProvisioningSpecGetOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.EdrsProvisioningSpecBindingType)
 }
 
-func edrsProvisioningSpecGetRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func edrsProvisioningSpecGetRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["cluster"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["cluster"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["cluster"] = "Cluster"
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["cluster"] = vapiBindings_.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["cluster"] = bindings.NewStringType()
 	pathParams["cluster"] = "cluster"
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
@@ -63,7 +63,7 @@ func edrsProvisioningSpecGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,

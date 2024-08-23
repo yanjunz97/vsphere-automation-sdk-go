@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="@VERB" verbose="1" >
+   <groups>
+      <run>
+         <!--
+            Go returns double values in valid format however not prefered by the VAPI Spec.
+            Disabling doubleNumbersPreferredFormat group until a rational implementation for go runtime exists
+            to conform to preferred doubles formatting in the spec.
+            See here for preferred formating: https://wiki.eng.vmware.com/VAPI/Specs/REST/Annotations2018/Serialization#Double
+            Jira item: VAPI-4158
+         -->
+         <!--
+            Few cases of actual and expected results from disabled tests:
+            expected: -124.0
+            actual: -124
+
+            expected: -1.0E-303
+            actual: -1e-303
+
+            expected: 1.23E303
+            actual: 1.23e+303
+         -->
+         <exclude name="doubleNumbersPreferredFormat" />
+      </run>
+   </groups>
+   <test name="Golang REST provider">
+      <packages>
+         <package name="com.vmware.vapi.rest.integration.verb" />
+      </packages>
+
+      <classes>
+         <class name="com.vmware.vapi.rest.integration.verb.FormUrlEncodedBodyNegativeTest">
+            <methods>
+               <!--
+                  TODO: verify whether this is possible problem in tets
+                  Jira item: VAPI-4332
+
+                  the following cases are expected to fail with 400 from tests
+                  but seems to rather succed in Go runtime. Meaning we need to verify
+                  whether there's a problem in the Go form urlencoded parser or tests.
+               -->
+               <exclude name="testEncoding_Illegal" />
+               <exclude name="testEncoding_ReservedCharacter" />
+               <exclude name="testEol" />
+               <exclude name="testOptionalString_MissingEq" />
+               <exclude name="testString_DuplicateSeparator" />
+               <exclude name="testUnencodedSpace" />
+               <exclude name="testUnsupportedMediaType" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonHeaderMappingNegativeTest">
+            <methods>
+               <!--
+                  Go runtime accepts UTF-8 strings wherea VAPI REST spec (and RFC 7230)
+                  expects only USASCII characters.
+                  Jira item: VAPI-4365
+               -->
+               <exclude name="testInvalidBinary" />
+               <exclude name="testInvalidMediaType" />
+               <exclude name="testLatin1InvalidValue" />
+               <exclude name="testMultipleValuesOneInvalid" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonResponseHeaderMappingNegativeTest">
+            <methods>
+               <!--
+                  Go runtime accepts UTF-8 strings wherea VAPI REST spec (and RFC 7230)
+                  expects only USASCII characters.
+                  Jira item: VAPI-4365
+               -->
+               <exclude name="testInvalidString" />
+               <!--
+                  Go binding structures declare required string properties as value parameters
+                  (optional values are declared as pointer to string).
+                  This means that instantiating such structure in go you'd have a default zero
+                  value, which for strings it is empty string. Tests below try to verify that
+                  a required string value is not provided, however this is not possible in go
+                  and thus they make no sense running on this runtime.
+               -->
+               <exclude name="testInvalidFields" />
+               <exclude name="testInvalidInt" />
+               <exclude name="testInvalidStruct" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonQueryMappingNegativeTest">
+            <methods>
+               <!--
+                  TODO: implementation bug
+                  Jira item: VAPI-4552
+
+                  Sets should only contain unique values (https://wiki.eng.vmware.com/VMODL2#Generic_Types),
+                  therefore the input is invalid and a bad request is anticipated.
+               -->
+               <exclude name="testSet_DuplicatedValues" />
+               <!--
+                  Only allowed binary query format by VAPI REST spec is base64uri.
+                  Thus encoded + signs in query (as requested in test) should not be accepted.
+                  Jira item: VAPI-4242
+               -->
+               <exclude name="testBinary_Base64_SlashPlus_UrlEncoded" />
+               <exclude name="testBinary_Base64_SlashPlus" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonBodyFieldMappingTest">
+            <methods>
+               <!--
+                  Go json decoder does not provide two-character sequence escape for backspace and form feed
+                  unicode characters thus it produces \u0008 \u000c instead.
+                  Please note that this is still valid json string
+                  Jira item: VAPI-4376
+               -->
+               <exclude name="testString_Escaped_Backslash" />
+               <!--
+                  Go json decoder does not provide two-character sequence escape for backspace and form feed
+                  unicode characters thus it produces \u0008 \u000c instead.
+                  Please note that this is still valid json string
+                  Jira item: VAPI-4377
+               -->
+               <exclude name="testString_Escaped_CodePoints_SurrogatePair" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonBodyMappingTest">
+            <methods>
+               <!--
+                  TODO: Go's limitation
+                  Jira item: VAPI-4329
+
+                  Go's time.Parse supports RFC3339 only partially. It turns out it
+                  supports seconds fraction only up till 9th digit (which represents nanosecond precision).
+               -->
+               <exclude name="testDateTime_TenDigitMs" />
+               <exclude name="testDateTime_TimeZone_32DigitMs" />
+               <!--
+                  Go json decoder does not provide two-character sequence escape for backspace and form feed
+                  unicode characters thus it produces \u0008 \u000c instead.
+                  Please note that this is still valid json string
+                  Jira item: VAPI-4376
+               -->
+               <exclude name="testString_Escaped_Backslash" />
+               <!--
+                  Go json decoder does not provide two-character sequence escape for backspace and form feed
+                  unicode characters thus it produces \u0008 \u000c instead.
+                  Please note that this is still valid json string
+                  Jira item: VAPI-4377
+               -->
+               <exclude name="testString_Escaped_CodePoints_SurrogatePair" />
+               <!--
+                  TODO: implementation bug
+                  Jira item: VAPI-4378
+
+                  Go bindings do not support RFC3987 for URI parameters (as stated as VMODL2 standard)
+               -->
+               <exclude name="testUri_Cyrillic" />
+               <exclude name="testUri_International" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.JsonMappingTest">
+            <methods>
+               <!--
+                  TODO: tests bug
+                  Jira item: VAPI-4313
+
+                  If these tests succeed than the following tests cases would fail
+                  (See more on the Jira item):
+                  - testPath_UrlEncoding
+                  - testPath_UrlEncoding_Upper
+               -->
+               <exclude name="testPathParam_UrlEncoding_Slash" />
+               <exclude name="testPathParam_UrlEncoding_Slash_Upper" />
+               <exclude name="testPercentEncodedLowerCase" />
+               <exclude name="testPercentEncodedUpperCase" />
+               <exclude name="testBreakingReservedDelimitersInPathParam_UrlEncoded" />
+               <exclude name="testReservedDelimitersInPathParam_DoubleDecoding" />
+            </methods>
+         </class>
+         <class name="com.vmware.vapi.rest.integration.verb.ChunkedEncodingTest">
+            <methods>
+               <!--
+                  TODO: implementation bug
+                  Jira item: VAPI-7278
+
+                  There are some edge cases in which the Go runtime is not able to process
+                  correctly requests that have chunked Tranfer-Encoding headers.
+               -->
+               <exclude name="testDateTimeOptional_Unset" />
+               <exclude name="testInput_OptionalUnset" />
+               <exclude name="testOptionalString_Unset_JsonNull" />
+            </methods>
+         </class>
+      </classes>
+   </test>
+</suite>

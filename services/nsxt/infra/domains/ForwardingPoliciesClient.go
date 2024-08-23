@@ -1,4 +1,5 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright (c) 2019-2024 Broadcom. All Rights Reserved.
+// The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -22,6 +23,8 @@ type ForwardingPoliciesClient interface {
 
 	// Delete forwarding policy.
 	//
+	// Deprecated: This API element is deprecated.
+	//
 	// @param domainIdParam Domain id (required)
 	// @param forwardingPolicyIdParam Forwarding map id (required)
 	//
@@ -33,6 +36,8 @@ type ForwardingPoliciesClient interface {
 	Delete(domainIdParam string, forwardingPolicyIdParam string) error
 
 	// Read forwarding policy.
+	//
+	// Deprecated: This API element is deprecated.
 	//
 	// @param domainIdParam Domain id (required)
 	// @param forwardingPolicyIdParam Forwarding map id (required)
@@ -46,6 +51,8 @@ type ForwardingPoliciesClient interface {
 	Get(domainIdParam string, forwardingPolicyIdParam string) (nsx_policyModel.ForwardingPolicy, error)
 
 	// List all forwarding policies for the given domain ordered by precedence.
+	//
+	// Deprecated: This API element is deprecated.
 	//
 	// @param domainIdParam Domain id (required)
 	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)
@@ -66,6 +73,8 @@ type ForwardingPoliciesClient interface {
 
 	// Create or update the forwarding policy. Performance Note: If you want to edit several rules in a forwarding policy use this API. It will perform better than several individual rule APIs. Just pass all the rules which you wish to edit as embedded rules to it.
 	//
+	// Deprecated: This API element is deprecated.
+	//
 	// @param domainIdParam Domain id (required)
 	// @param forwardingPolicyIdParam Forwarding map id (required)
 	// @param forwardingPolicyParam (required)
@@ -78,6 +87,8 @@ type ForwardingPoliciesClient interface {
 	Patch(domainIdParam string, forwardingPolicyIdParam string, forwardingPolicyParam nsx_policyModel.ForwardingPolicy) error
 
 	// Create or update the forwarding policy. Performance Note: If you want to edit several rules in a forwarding policy use this API. It will perform better than several individual rule APIs. Just pass all the rules which you wish to edit as embedded rules to it.
+	//
+	// Deprecated: This API element is deprecated.
 	//
 	// @param domainIdParam Domain id (required)
 	// @param forwardingPolicyIdParam Forwarding map id (required)

@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright © 2019-2021 VMware, Inc. All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -9,14 +9,15 @@
 package draas
 
 import (
-	vapiStdErrors_ "github.com/vmware/vsphere-automation-sdk-go/lib/vapi/std/errors"
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiCore_ "github.com/vmware/vsphere-automation-sdk-go/runtime/core"
-	vapiProtocolClient_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol/client"
-	vmcDraasModel "github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
+	"github.com/vmware/vsphere-automation-sdk-go/lib/vapi/std/errors"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/core"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/lib"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/protocol/client"
+	"github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
 )
 
-const _ = vapiCore_.SupportedByRuntimeVersion2
+const _ = core.SupportedByRuntimeVersion1
 
 type SiteRecoveryVersionsClient interface {
 
@@ -24,68 +25,68 @@ type SiteRecoveryVersionsClient interface {
 	//
 	// @param orgParam Organization identifier (required)
 	// @param sddcParam sddc identifier (required)
+	// @param versionSourceParam Represents the source for getting the version from. (optional)
 	// @return com.vmware.vmc.draas.model.SiteRecoveryVersions
-	//
 	// @throws Unauthenticated  Unauthorized
 	// @throws InvalidRequest  Invalid action or bad argument
 	// @throws Unauthorized  Forbidden
 	// @throws NotFound  Cannot find site recovery versions for sddc identifier
-	Get(orgParam string, sddcParam string) (vmcDraasModel.SiteRecoveryVersions, error)
+	Get(orgParam string, sddcParam string, versionSourceParam *string) (model.SiteRecoveryVersions, error)
 }
 
 type siteRecoveryVersionsClient struct {
-	connector           vapiProtocolClient_.Connector
-	interfaceDefinition vapiCore_.InterfaceDefinition
-	errorsBindingMap    map[string]vapiBindings_.BindingType
+	connector           client.Connector
+	interfaceDefinition core.InterfaceDefinition
+	errorsBindingMap    map[string]bindings.BindingType
 }
 
-func NewSiteRecoveryVersionsClient(connector vapiProtocolClient_.Connector) *siteRecoveryVersionsClient {
-	interfaceIdentifier := vapiCore_.NewInterfaceIdentifier("com.vmware.vmc.draas.site_recovery_versions")
-	methodIdentifiers := map[string]vapiCore_.MethodIdentifier{
-		"get": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "get"),
+func NewSiteRecoveryVersionsClient(connector client.Connector) *siteRecoveryVersionsClient {
+	interfaceIdentifier := core.NewInterfaceIdentifier("com.vmware.vmc.draas.site_recovery_versions")
+	methodIdentifiers := map[string]core.MethodIdentifier{
+		"get": core.NewMethodIdentifier(interfaceIdentifier, "get"),
 	}
-	interfaceDefinition := vapiCore_.NewInterfaceDefinition(interfaceIdentifier, methodIdentifiers)
-	errorsBindingMap := make(map[string]vapiBindings_.BindingType)
+	interfaceDefinition := core.NewInterfaceDefinition(interfaceIdentifier, methodIdentifiers)
+	errorsBindingMap := make(map[string]bindings.BindingType)
 
 	sIface := siteRecoveryVersionsClient{interfaceDefinition: interfaceDefinition, errorsBindingMap: errorsBindingMap, connector: connector}
 	return &sIface
 }
 
-func (sIface *siteRecoveryVersionsClient) GetErrorBindingType(errorName string) vapiBindings_.BindingType {
+func (sIface *siteRecoveryVersionsClient) GetErrorBindingType(errorName string) bindings.BindingType {
 	if entry, ok := sIface.errorsBindingMap[errorName]; ok {
 		return entry
 	}
-	return vapiStdErrors_.ERROR_BINDINGS_MAP[errorName]
+	return errors.ERROR_BINDINGS_MAP[errorName]
 }
 
-func (sIface *siteRecoveryVersionsClient) Get(orgParam string, sddcParam string) (vmcDraasModel.SiteRecoveryVersions, error) {
+func (sIface *siteRecoveryVersionsClient) Get(orgParam string, sddcParam string, versionSourceParam *string) (model.SiteRecoveryVersions, error) {
 	typeConverter := sIface.connector.TypeConverter()
 	executionContext := sIface.connector.NewExecutionContext()
-	operationRestMetaData := siteRecoveryVersionsGetRestMetadata()
-	executionContext.SetConnectionMetadata(vapiCore_.RESTMetadataKey, operationRestMetaData)
-	executionContext.SetConnectionMetadata(vapiCore_.ResponseTypeKey, vapiCore_.NewResponseType(true, false))
-
-	sv := vapiBindings_.NewStructValueBuilder(siteRecoveryVersionsGetInputType(), typeConverter)
+	sv := bindings.NewStructValueBuilder(siteRecoveryVersionsGetInputType(), typeConverter)
 	sv.AddStructField("Org", orgParam)
 	sv.AddStructField("Sddc", sddcParam)
+	sv.AddStructField("VersionSource", versionSourceParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
-		var emptyOutput vmcDraasModel.SiteRecoveryVersions
-		return emptyOutput, vapiBindings_.VAPIerrorsToError(inputError)
+		var emptyOutput model.SiteRecoveryVersions
+		return emptyOutput, bindings.VAPIerrorsToError(inputError)
 	}
-
+	operationRestMetaData := siteRecoveryVersionsGetRestMetadata()
+	connectionMetadata := map[string]interface{}{lib.REST_METADATA: operationRestMetaData}
+	connectionMetadata["isStreamingResponse"] = false
+	sIface.connector.SetConnectionMetadata(connectionMetadata)
 	methodResult := sIface.connector.GetApiProvider().Invoke("com.vmware.vmc.draas.site_recovery_versions", "get", inputDataValue, executionContext)
-	var emptyOutput vmcDraasModel.SiteRecoveryVersions
+	var emptyOutput model.SiteRecoveryVersions
 	if methodResult.IsSuccess() {
-		output, errorInOutput := typeConverter.ConvertToGolang(methodResult.Output(), SiteRecoveryVersionsGetOutputType())
+		output, errorInOutput := typeConverter.ConvertToGolang(methodResult.Output(), siteRecoveryVersionsGetOutputType())
 		if errorInOutput != nil {
-			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInOutput)
+			return emptyOutput, bindings.VAPIerrorsToError(errorInOutput)
 		}
-		return output.(vmcDraasModel.SiteRecoveryVersions), nil
+		return output.(model.SiteRecoveryVersions), nil
 	} else {
 		methodError, errorInError := typeConverter.ConvertToGolang(methodResult.Error(), sIface.GetErrorBindingType(methodResult.Error().Name()))
 		if errorInError != nil {
-			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInError)
+			return emptyOutput, bindings.VAPIerrorsToError(errorInError)
 		}
 		return emptyOutput, methodError.(error)
 	}

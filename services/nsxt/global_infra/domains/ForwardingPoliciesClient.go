@@ -1,4 +1,5 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright (c) 2019-2024 Broadcom. All Rights Reserved.
+// The term "Broadcom" refers to Broadcom Inc. and/or its subsidiaries.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -22,6 +23,8 @@ type ForwardingPoliciesClient interface {
 
 	// Read forwarding policy.
 	//
+	// Deprecated: This API element is deprecated.
+	//
 	// @param domainIdParam Domain id (required)
 	// @param forwardingPolicyIdParam Forwarding map id (required)
 	// @return com.vmware.nsx_policy.model.ForwardingPolicy
@@ -34,6 +37,8 @@ type ForwardingPoliciesClient interface {
 	Get(domainIdParam string, forwardingPolicyIdParam string) (nsx_policyModel.ForwardingPolicy, error)
 
 	// List all forwarding policies for the given domain ordered by precedence.
+	//
+	// Deprecated: This API element is deprecated.
 	//
 	// @param domainIdParam Domain id (required)
 	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)

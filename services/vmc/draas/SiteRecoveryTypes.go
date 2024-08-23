@@ -1,4 +1,4 @@
-// Copyright © 2019-2023 VMware, Inc. All Rights Reserved.
+// Copyright © 2019-2021 VMware, Inc. All Rights Reserved.
 // SPDX-License-Identifier: BSD-2-Clause
 
 // Auto generated code. DO NOT EDIT.
@@ -11,57 +11,64 @@
 package draas
 
 import (
-	vapiBindings_ "github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
-	vapiData_ "github.com/vmware/vsphere-automation-sdk-go/runtime/data"
-	vapiProtocol_ "github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
-	vmcDraasModel "github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/bindings"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/data"
+	"github.com/vmware/vsphere-automation-sdk-go/runtime/protocol"
+	"github.com/vmware/vsphere-automation-sdk-go/services/vmc/draas/model"
 	"reflect"
 )
 
-func siteRecoveryDeleteInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func siteRecoveryDeleteInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["delete_config_internal"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.DeleteConfigInternalBindingType))
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["force"] = bindings.NewOptionalType(bindings.NewBooleanType())
+	fields["deactivate_hcx"] = bindings.NewOptionalType(bindings.NewBooleanType())
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	fieldNameMap["delete_config_internal"] = "DeleteConfigInternal"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	fieldNameMap["force"] = "Force"
+	fieldNameMap["deactivate_hcx"] = "DeactivateHcx"
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func SiteRecoveryDeleteOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(vmcDraasModel.TaskBindingType)
+func siteRecoveryDeleteOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.TaskBindingType)
 }
 
-func siteRecoveryDeleteRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func siteRecoveryDeleteRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["delete_config_internal"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.DeleteConfigInternalBindingType))
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["force"] = bindings.NewOptionalType(bindings.NewBooleanType())
+	fields["deactivate_hcx"] = bindings.NewOptionalType(bindings.NewBooleanType())
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	fieldNameMap["delete_config_internal"] = "DeleteConfigInternal"
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["delete_config_internal"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.DeleteConfigInternalBindingType))
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
+	fieldNameMap["force"] = "Force"
+	fieldNameMap["deactivate_hcx"] = "DeactivateHcx"
+	paramsTypeMap["force"] = bindings.NewOptionalType(bindings.NewBooleanType())
+	paramsTypeMap["deactivate_hcx"] = bindings.NewOptionalType(bindings.NewBooleanType())
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
+	queryParams["deactivate_hcx"] = "deactivate_hcx"
+	queryParams["force"] = "force"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,
@@ -71,7 +78,7 @@ func siteRecoveryDeleteRestMetadata() vapiProtocol_.OperationRestMetadata {
 		dispatchHeaderParams,
 		bodyFieldsMap,
 		"",
-		"delete_config_internal",
+		"",
 		"DELETE",
 		"/vmc/draas/api/orgs/{org}/sddcs/{sddc}/site-recovery",
 		"",
@@ -82,45 +89,45 @@ func siteRecoveryDeleteRestMetadata() vapiProtocol_.OperationRestMetadata {
 		map[string]int{"com.vmware.vapi.std.errors.unauthenticated": 401, "com.vmware.vapi.std.errors.invalid_request": 400, "com.vmware.vapi.std.errors.unauthorized": 403, "com.vmware.vapi.std.errors.not_found": 404})
 }
 
-func siteRecoveryGetInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func siteRecoveryGetInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func SiteRecoveryGetOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(vmcDraasModel.SiteRecoveryBindingType)
+func siteRecoveryGetOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.SiteRecoveryBindingType)
 }
 
-func siteRecoveryGetRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func siteRecoveryGetRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,
@@ -141,50 +148,50 @@ func siteRecoveryGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 		map[string]int{"com.vmware.vapi.std.errors.unauthenticated": 401, "com.vmware.vapi.std.errors.invalid_request": 400, "com.vmware.vapi.std.errors.unauthorized": 403})
 }
 
-func siteRecoveryPostInputType() vapiBindings_.StructType {
-	fields := make(map[string]vapiBindings_.BindingType)
+func siteRecoveryPostInputType() bindings.StructType {
+	fields := make(map[string]bindings.BindingType)
 	fieldNameMap := make(map[string]string)
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["activate_site_recovery_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.ActivateSiteRecoveryConfigBindingType))
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["activate_site_recovery_config"] = bindings.NewOptionalType(bindings.NewReferenceType(model.ActivateSiteRecoveryConfigBindingType))
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["activate_site_recovery_config"] = "ActivateSiteRecoveryConfig"
-	var validators = []vapiBindings_.Validator{}
-	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
+	var validators = []bindings.Validator{}
+	return bindings.NewStructType("operation-input", fields, reflect.TypeOf(data.StructValue{}), fieldNameMap, validators)
 }
 
-func SiteRecoveryPostOutputType() vapiBindings_.BindingType {
-	return vapiBindings_.NewReferenceType(vmcDraasModel.TaskBindingType)
+func siteRecoveryPostOutputType() bindings.BindingType {
+	return bindings.NewReferenceType(model.TaskBindingType)
 }
 
-func siteRecoveryPostRestMetadata() vapiProtocol_.OperationRestMetadata {
-	fields := map[string]vapiBindings_.BindingType{}
+func siteRecoveryPostRestMetadata() protocol.OperationRestMetadata {
+	fields := map[string]bindings.BindingType{}
 	fieldNameMap := map[string]string{}
-	paramsTypeMap := map[string]vapiBindings_.BindingType{}
+	paramsTypeMap := map[string]bindings.BindingType{}
 	pathParams := map[string]string{}
 	queryParams := map[string]string{}
 	headerParams := map[string]string{}
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
-	fields["org"] = vapiBindings_.NewStringType()
-	fields["sddc"] = vapiBindings_.NewStringType()
-	fields["activate_site_recovery_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.ActivateSiteRecoveryConfigBindingType))
+	fields["org"] = bindings.NewStringType()
+	fields["sddc"] = bindings.NewStringType()
+	fields["activate_site_recovery_config"] = bindings.NewOptionalType(bindings.NewReferenceType(model.ActivateSiteRecoveryConfigBindingType))
 	fieldNameMap["org"] = "Org"
 	fieldNameMap["sddc"] = "Sddc"
 	fieldNameMap["activate_site_recovery_config"] = "ActivateSiteRecoveryConfig"
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
-	paramsTypeMap["activate_site_recovery_config"] = vapiBindings_.NewOptionalType(vapiBindings_.NewReferenceType(vmcDraasModel.ActivateSiteRecoveryConfigBindingType))
-	paramsTypeMap["org"] = vapiBindings_.NewStringType()
-	paramsTypeMap["sddc"] = vapiBindings_.NewStringType()
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
+	paramsTypeMap["activate_site_recovery_config"] = bindings.NewOptionalType(bindings.NewReferenceType(model.ActivateSiteRecoveryConfigBindingType))
+	paramsTypeMap["org"] = bindings.NewStringType()
+	paramsTypeMap["sddc"] = bindings.NewStringType()
 	pathParams["org"] = "org"
 	pathParams["sddc"] = "sddc"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"] = make(map[string]string)
 	errorHeaders["com.vmware.vapi.std.errors.unauthenticated"]["challenge"] = "WWW-Authenticate"
-	return vapiProtocol_.NewOperationRestMetadata(
+	return protocol.NewOperationRestMetadata(
 		fields,
 		fieldNameMap,
 		paramsTypeMap,
