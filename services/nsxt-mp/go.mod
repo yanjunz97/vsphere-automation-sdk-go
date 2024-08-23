@@ -2,6 +2,11 @@ module github.com/vmware/vsphere-automation-sdk-go/services/nsxt-mp
 
 go 1.17
 
+replace (
+	github.com/vmware/vsphere-automation-sdk-go/lib => github.com/yanjunz97/vsphere-automation-sdk-go/lib v0.0.0-20240823062859-191e51e646c1
+	github.com/vmware/vsphere-automation-sdk-go/runtime => github.com/yanjunz97/vsphere-automation-sdk-go/runtime v0.0.0-20240823062859-191e51e646c1
+)
+
 require (
 	github.com/vmware/vsphere-automation-sdk-go/lib v0.7.0
 	github.com/vmware/vsphere-automation-sdk-go/runtime v0.7.0
