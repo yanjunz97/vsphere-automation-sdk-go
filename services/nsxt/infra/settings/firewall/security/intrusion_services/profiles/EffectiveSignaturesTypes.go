@@ -23,7 +23,9 @@ func effectiveSignaturesGetInputType() vapiBindings_.StructType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
 	fields["profile_id"] = vapiBindings_.NewStringType()
+	fields["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["profile_id"] = "ProfileId"
+	fieldNameMap["enforcement_point_path"] = "EnforcementPointPath"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
 }
@@ -42,10 +44,14 @@ func effectiveSignaturesGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
 	fields["profile_id"] = vapiBindings_.NewStringType()
+	fields["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["profile_id"] = "ProfileId"
+	fieldNameMap["enforcement_point_path"] = "EnforcementPointPath"
 	paramsTypeMap["profile_id"] = vapiBindings_.NewStringType()
+	paramsTypeMap["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	paramsTypeMap["profileId"] = vapiBindings_.NewStringType()
 	pathParams["profile_id"] = "profileId"
+	queryParams["enforcement_point_path"] = "enforcement_point_path"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	return vapiProtocol_.NewOperationRestMetadata(

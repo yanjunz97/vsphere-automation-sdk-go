@@ -23,8 +23,8 @@ type AlarmsClient interface {
 
 	// Retrieves only the resources with the reason not \"SUCCESS\". In case of failure or warning of the resource a reason object explaining the type of failure (ERROR, WARNING) and the detailed message of what the user could do to remediate is captured.
 	//
-	// @param orgIdParam The organization ID (required)
-	// @param projectIdParam The project ID (required)
+	// @param orgIdParam (required)
+	// @param projectIdParam (required)
 	// @param vpcIdParam (required)
 	// @return com.vmware.nsx_policy.model.PolicyVpcSecurityPoliciesAlarm
 	//

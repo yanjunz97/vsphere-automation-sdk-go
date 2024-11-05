@@ -23,7 +23,9 @@ func clusterConfigsGetInputType() vapiBindings_.StructType {
 	fields := make(map[string]vapiBindings_.BindingType)
 	fieldNameMap := make(map[string]string)
 	fields["cluster_config_id"] = vapiBindings_.NewStringType()
+	fields["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["cluster_config_id"] = "ClusterConfigId"
+	fieldNameMap["enforcement_point_path"] = "EnforcementPointPath"
 	var validators = []vapiBindings_.Validator{}
 	return vapiBindings_.NewStructType("operation-input", fields, reflect.TypeOf(vapiData_.StructValue{}), fieldNameMap, validators)
 }
@@ -42,10 +44,14 @@ func clusterConfigsGetRestMetadata() vapiProtocol_.OperationRestMetadata {
 	dispatchHeaderParams := map[string]string{}
 	bodyFieldsMap := map[string]string{}
 	fields["cluster_config_id"] = vapiBindings_.NewStringType()
+	fields["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	fieldNameMap["cluster_config_id"] = "ClusterConfigId"
+	fieldNameMap["enforcement_point_path"] = "EnforcementPointPath"
+	paramsTypeMap["enforcement_point_path"] = vapiBindings_.NewOptionalType(vapiBindings_.NewStringType())
 	paramsTypeMap["cluster_config_id"] = vapiBindings_.NewStringType()
 	paramsTypeMap["clusterConfigId"] = vapiBindings_.NewStringType()
 	pathParams["cluster_config_id"] = "clusterConfigId"
+	queryParams["enforcement_point_path"] = "enforcement_point_path"
 	resultHeaders := map[string]string{}
 	errorHeaders := map[string]map[string]string{}
 	return vapiProtocol_.NewOperationRestMetadata(

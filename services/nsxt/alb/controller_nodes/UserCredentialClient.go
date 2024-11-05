@@ -21,7 +21,7 @@ const _ = vapiCore_.SupportedByRuntimeVersion2
 
 type UserCredentialClient interface {
 
-	// Use this API to create service user object credential in ALB controller clutser. This API is for VCF deployments only.
+	// Use this API to create service user object credential in ALB controller cluster. This API is for VCF deployments only.
 	//
 	// @param aLBControllerUserCredentialParam (required)
 	// @return com.vmware.nsx_policy.model.ALBControllerUserCredentialResponse
@@ -32,6 +32,19 @@ type UserCredentialClient interface {
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
 	Create(aLBControllerUserCredentialParam nsx_policyModel.ALBControllerUserCredential) (nsx_policyModel.ALBControllerUserCredentialResponse, error)
+
+	// Use this API to delete user credentials in ALB controller cluster. This API is for VCF deployments only.
+	//
+	// @param usernameParam Credentials to be deleted. (required)
+	// @param userCredentialTypeParam Type of user credential (required)
+	// @param clusteringIdParam Unique Id for NSX Advanced Load Balancer Controller Cluster used in VCF managed NSX (optional)
+	//
+	// @throws InvalidRequest  Bad Request, Precondition Failed
+	// @throws Unauthorized  Forbidden
+	// @throws ServiceUnavailable  Service Unavailable
+	// @throws InternalServerError  Internal Server Error
+	// @throws NotFound  Not Found
+	Delete(usernameParam string, userCredentialTypeParam string, clusteringIdParam *string) error
 
 	// Use this API to update admin user password or service user object password in ALB controller. This API is for VCF deployments only.
 	//
@@ -57,6 +70,7 @@ func NewUserCredentialClient(connector vapiProtocolClient_.Connector) *userCrede
 	interfaceIdentifier := vapiCore_.NewInterfaceIdentifier("com.vmware.nsx_policy.alb.controller_nodes.user_credential")
 	methodIdentifiers := map[string]vapiCore_.MethodIdentifier{
 		"create": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "create"),
+		"delete": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "delete"),
 		"update": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "update"),
 	}
 	interfaceDefinition := vapiCore_.NewInterfaceDefinition(interfaceIdentifier, methodIdentifiers)
@@ -102,6 +116,34 @@ func (uIface *userCredentialClient) Create(aLBControllerUserCredentialParam nsx_
 			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInError)
 		}
 		return emptyOutput, methodError.(error)
+	}
+}
+
+func (uIface *userCredentialClient) Delete(usernameParam string, userCredentialTypeParam string, clusteringIdParam *string) error {
+	typeConverter := uIface.connector.TypeConverter()
+	executionContext := uIface.connector.NewExecutionContext()
+	operationRestMetaData := userCredentialDeleteRestMetadata()
+	executionContext.SetConnectionMetadata(vapiCore_.RESTMetadataKey, operationRestMetaData)
+	executionContext.SetConnectionMetadata(vapiCore_.ResponseTypeKey, vapiCore_.NewResponseType(true, false))
+
+	sv := vapiBindings_.NewStructValueBuilder(userCredentialDeleteInputType(), typeConverter)
+	sv.AddStructField("Username", usernameParam)
+	sv.AddStructField("UserCredentialType", userCredentialTypeParam)
+	sv.AddStructField("ClusteringId", clusteringIdParam)
+	inputDataValue, inputError := sv.GetStructValue()
+	if inputError != nil {
+		return vapiBindings_.VAPIerrorsToError(inputError)
+	}
+
+	methodResult := uIface.connector.GetApiProvider().Invoke("com.vmware.nsx_policy.alb.controller_nodes.user_credential", "delete", inputDataValue, executionContext)
+	if methodResult.IsSuccess() {
+		return nil
+	} else {
+		methodError, errorInError := typeConverter.ConvertToGolang(methodResult.Error(), uIface.GetErrorBindingType(methodResult.Error().Name()))
+		if errorInError != nil {
+			return vapiBindings_.VAPIerrorsToError(errorInError)
+		}
+		return methodError.(error)
 	}
 }
 

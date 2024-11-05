@@ -24,6 +24,7 @@ type ClusterConfigsClient interface {
 	// Read intrusion detection system cluster config
 	//
 	// @param clusterConfigIdParam User entered ID (required)
+	// @param enforcementPointPathParam String Path of the enforcement point (optional)
 	// @return com.vmware.nsx_policy.model.IdsClusterConfig
 	//
 	// @throws InvalidRequest  Bad Request, Precondition Failed
@@ -31,7 +32,7 @@ type ClusterConfigsClient interface {
 	// @throws ServiceUnavailable  Service Unavailable
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
-	Get(clusterConfigIdParam string) (nsx_policyModel.IdsClusterConfig, error)
+	Get(clusterConfigIdParam string, enforcementPointPathParam *string) (nsx_policyModel.IdsClusterConfig, error)
 
 	// List intrusion detection system cluster configs.
 	//
@@ -105,7 +106,7 @@ func (cIface *clusterConfigsClient) GetErrorBindingType(errorName string) vapiBi
 	return vapiStdErrors_.ERROR_BINDINGS_MAP[errorName]
 }
 
-func (cIface *clusterConfigsClient) Get(clusterConfigIdParam string) (nsx_policyModel.IdsClusterConfig, error) {
+func (cIface *clusterConfigsClient) Get(clusterConfigIdParam string, enforcementPointPathParam *string) (nsx_policyModel.IdsClusterConfig, error) {
 	typeConverter := cIface.connector.TypeConverter()
 	executionContext := cIface.connector.NewExecutionContext()
 	operationRestMetaData := clusterConfigsGetRestMetadata()
@@ -114,6 +115,7 @@ func (cIface *clusterConfigsClient) Get(clusterConfigIdParam string) (nsx_policy
 
 	sv := vapiBindings_.NewStructValueBuilder(clusterConfigsGetInputType(), typeConverter)
 	sv.AddStructField("ClusterConfigId", clusterConfigIdParam)
+	sv.AddStructField("EnforcementPointPath", enforcementPointPathParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
 		var emptyOutput nsx_policyModel.IdsClusterConfig

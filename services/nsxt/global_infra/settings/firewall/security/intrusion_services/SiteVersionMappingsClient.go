@@ -32,6 +32,23 @@ type SiteVersionMappingsClient interface {
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
 	Get(mappingIdParam string) (nsx_policyModel.IdsSiteVersionMapping, error)
+
+	// List signature version site mappings on GM.
+	//
+	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)
+	// @param includeMarkForDeleteObjectsParam Include objects that are marked for deletion in results (optional, default to false)
+	// @param includedFieldsParam Comma separated list of fields that should be included in query result (optional)
+	// @param pageSizeParam Maximum number of results to return in this page (server may return fewer) (optional, default to 1000)
+	// @param sortAscendingParam (optional)
+	// @param sortByParam Field by which records are sorted (optional)
+	// @return com.vmware.nsx_policy.model.IdsSiteVersionMappingListResult
+	//
+	// @throws InvalidRequest  Bad Request, Precondition Failed
+	// @throws Unauthorized  Forbidden
+	// @throws ServiceUnavailable  Service Unavailable
+	// @throws InternalServerError  Internal Server Error
+	// @throws NotFound  Not Found
+	List(cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.IdsSiteVersionMappingListResult, error)
 }
 
 type siteVersionMappingsClient struct {
@@ -43,7 +60,8 @@ type siteVersionMappingsClient struct {
 func NewSiteVersionMappingsClient(connector vapiProtocolClient_.Connector) *siteVersionMappingsClient {
 	interfaceIdentifier := vapiCore_.NewInterfaceIdentifier("com.vmware.nsx_policy.global_infra.settings.firewall.security.intrusion_services.site_version_mappings")
 	methodIdentifiers := map[string]vapiCore_.MethodIdentifier{
-		"get": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "get"),
+		"get":  vapiCore_.NewMethodIdentifier(interfaceIdentifier, "get"),
+		"list": vapiCore_.NewMethodIdentifier(interfaceIdentifier, "list"),
 	}
 	interfaceDefinition := vapiCore_.NewInterfaceDefinition(interfaceIdentifier, methodIdentifiers)
 	errorsBindingMap := make(map[string]vapiBindings_.BindingType)
@@ -82,6 +100,43 @@ func (sIface *siteVersionMappingsClient) Get(mappingIdParam string) (nsx_policyM
 			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInOutput)
 		}
 		return output.(nsx_policyModel.IdsSiteVersionMapping), nil
+	} else {
+		methodError, errorInError := typeConverter.ConvertToGolang(methodResult.Error(), sIface.GetErrorBindingType(methodResult.Error().Name()))
+		if errorInError != nil {
+			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInError)
+		}
+		return emptyOutput, methodError.(error)
+	}
+}
+
+func (sIface *siteVersionMappingsClient) List(cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.IdsSiteVersionMappingListResult, error) {
+	typeConverter := sIface.connector.TypeConverter()
+	executionContext := sIface.connector.NewExecutionContext()
+	operationRestMetaData := siteVersionMappingsListRestMetadata()
+	executionContext.SetConnectionMetadata(vapiCore_.RESTMetadataKey, operationRestMetaData)
+	executionContext.SetConnectionMetadata(vapiCore_.ResponseTypeKey, vapiCore_.NewResponseType(true, false))
+
+	sv := vapiBindings_.NewStructValueBuilder(siteVersionMappingsListInputType(), typeConverter)
+	sv.AddStructField("Cursor", cursorParam)
+	sv.AddStructField("IncludeMarkForDeleteObjects", includeMarkForDeleteObjectsParam)
+	sv.AddStructField("IncludedFields", includedFieldsParam)
+	sv.AddStructField("PageSize", pageSizeParam)
+	sv.AddStructField("SortAscending", sortAscendingParam)
+	sv.AddStructField("SortBy", sortByParam)
+	inputDataValue, inputError := sv.GetStructValue()
+	if inputError != nil {
+		var emptyOutput nsx_policyModel.IdsSiteVersionMappingListResult
+		return emptyOutput, vapiBindings_.VAPIerrorsToError(inputError)
+	}
+
+	methodResult := sIface.connector.GetApiProvider().Invoke("com.vmware.nsx_policy.global_infra.settings.firewall.security.intrusion_services.site_version_mappings", "list", inputDataValue, executionContext)
+	var emptyOutput nsx_policyModel.IdsSiteVersionMappingListResult
+	if methodResult.IsSuccess() {
+		output, errorInOutput := typeConverter.ConvertToGolang(methodResult.Output(), SiteVersionMappingsListOutputType())
+		if errorInOutput != nil {
+			return emptyOutput, vapiBindings_.VAPIerrorsToError(errorInOutput)
+		}
+		return output.(nsx_policyModel.IdsSiteVersionMappingListResult), nil
 	} else {
 		methodError, errorInError := typeConverter.ConvertToGolang(methodResult.Error(), sIface.GetErrorBindingType(methodResult.Error().Name()))
 		if errorInError != nil {

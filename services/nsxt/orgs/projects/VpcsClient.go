@@ -26,13 +26,14 @@ type VpcsClient interface {
 	// @param orgIdParam (required)
 	// @param projectIdParam (required)
 	// @param vpcIdParam (required)
+	// @param isRecursiveParam Flag to delete entire VPC tree recursively. (optional, default to false)
 	//
 	// @throws InvalidRequest  Bad Request, Precondition Failed
 	// @throws Unauthorized  Forbidden
 	// @throws ServiceUnavailable  Service Unavailable
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
-	Delete(orgIdParam string, projectIdParam string, vpcIdParam string) error
+	Delete(orgIdParam string, projectIdParam string, vpcIdParam string, isRecursiveParam *bool) error
 
 	// Get VPC
 	//
@@ -126,7 +127,7 @@ func (vIface *vpcsClient) GetErrorBindingType(errorName string) vapiBindings_.Bi
 	return vapiStdErrors_.ERROR_BINDINGS_MAP[errorName]
 }
 
-func (vIface *vpcsClient) Delete(orgIdParam string, projectIdParam string, vpcIdParam string) error {
+func (vIface *vpcsClient) Delete(orgIdParam string, projectIdParam string, vpcIdParam string, isRecursiveParam *bool) error {
 	typeConverter := vIface.connector.TypeConverter()
 	executionContext := vIface.connector.NewExecutionContext()
 	operationRestMetaData := vpcsDeleteRestMetadata()
@@ -137,6 +138,7 @@ func (vIface *vpcsClient) Delete(orgIdParam string, projectIdParam string, vpcId
 	sv.AddStructField("OrgId", orgIdParam)
 	sv.AddStructField("ProjectId", projectIdParam)
 	sv.AddStructField("VpcId", vpcIdParam)
+	sv.AddStructField("IsRecursive", isRecursiveParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
 		return vapiBindings_.VAPIerrorsToError(inputError)

@@ -96,7 +96,7 @@ type CsrsClient interface {
 	// @throws NotFound  Not Found
 	List(orgIdParam string, projectIdParam string, cursorParam *string, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.TlsCsrListResult, error)
 
-	// Self-signs the previously generated CSR. This action is similar to the import certificate action, but instead of using a public certificate signed by a CA, the self_sign POST action uses a certificate that is signed with NSX's own private key. For validity of non-CA certificates, if a value greater than 825 days is provided, it will be set to 825 days. No limit is set for CA certificates.
+	// Self-signs the previously generated CSR. This action is similar to the import certificate action, but instead of using a public certificate signed by a CA, the self_sign POST action uses a certificate that is signed with NSX's own private key. The maximum validity limit for non-CA certificates is 825 days, except that values of 3,650 and 36,500 days are allowed. No limit is set for CA certificates.
 	//
 	// @param orgIdParam The organization ID (required)
 	// @param projectIdParam The project ID (required)
@@ -111,7 +111,7 @@ type CsrsClient interface {
 	// @throws NotFound  Not Found
 	Selfsign(orgIdParam string, projectIdParam string, csrIdParam string, daysValidParam int64) (nsx_policyModel.TlsCertificate, error)
 
-	// Creates a new self-signed certificate. A private key is also created at the same time. This is convenience call that will generate a CSR and then self-sign it. For validity of non-CA certificates, if a value greater than 825 days is provided, it will be set to 825 days. No limit is set for CA certificates.
+	// Creates a new self-signed certificate. A private key is also created at the same time. This is convenience call that will generate a CSR and then self-sign it. The maximum validity limit for non-CA certificates is 825 days, except that values of 3,650 and 36,500 days are allowed. No limit is set for CA certificates.
 	//
 	// @param orgIdParam The organization ID (required)
 	// @param projectIdParam The project ID (required)

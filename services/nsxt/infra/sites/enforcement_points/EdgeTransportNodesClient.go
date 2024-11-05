@@ -53,11 +53,14 @@ type EdgeTransportNodesClient interface {
 	// @param siteIdParam (required)
 	// @param enforcementpointIdParam (required)
 	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)
+	// @param inMaintenanceModeParam Maintenance mode flag (optional)
 	// @param includeMarkForDeleteObjectsParam Include objects that are marked for deletion in results (optional, default to false)
 	// @param includedFieldsParam Comma separated list of fields that should be included in query result (optional)
+	// @param managementIpParam Edge transport node management IP address (optional)
 	// @param pageSizeParam Maximum number of results to return in this page (server may return fewer) (optional, default to 1000)
 	// @param sortAscendingParam (optional)
 	// @param sortByParam Field by which records are sorted (optional)
+	// @param transportZonePathParam Transport zone path (optional)
 	// @return com.vmware.nsx_policy.model.PolicyEdgeTransportNodeListResult
 	//
 	// @throws InvalidRequest  Bad Request, Precondition Failed
@@ -65,7 +68,7 @@ type EdgeTransportNodesClient interface {
 	// @throws ServiceUnavailable  Service Unavailable
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
-	List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.PolicyEdgeTransportNodeListResult, error)
+	List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, inMaintenanceModeParam *bool, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, managementIpParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string, transportZonePathParam *string) (nsx_policyModel.PolicyEdgeTransportNodeListResult, error)
 
 	// If the passed Edge Transport Node does not already exist, create a new Edge Transport Node. If it already exists, patch it.
 	//
@@ -188,7 +191,7 @@ func (eIface *edgeTransportNodesClient) Get(siteIdParam string, enforcementpoint
 	}
 }
 
-func (eIface *edgeTransportNodesClient) List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.PolicyEdgeTransportNodeListResult, error) {
+func (eIface *edgeTransportNodesClient) List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, inMaintenanceModeParam *bool, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, managementIpParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string, transportZonePathParam *string) (nsx_policyModel.PolicyEdgeTransportNodeListResult, error) {
 	typeConverter := eIface.connector.TypeConverter()
 	executionContext := eIface.connector.NewExecutionContext()
 	operationRestMetaData := edgeTransportNodesListRestMetadata()
@@ -199,11 +202,14 @@ func (eIface *edgeTransportNodesClient) List(siteIdParam string, enforcementpoin
 	sv.AddStructField("SiteId", siteIdParam)
 	sv.AddStructField("EnforcementpointId", enforcementpointIdParam)
 	sv.AddStructField("Cursor", cursorParam)
+	sv.AddStructField("InMaintenanceMode", inMaintenanceModeParam)
 	sv.AddStructField("IncludeMarkForDeleteObjects", includeMarkForDeleteObjectsParam)
 	sv.AddStructField("IncludedFields", includedFieldsParam)
+	sv.AddStructField("ManagementIp", managementIpParam)
 	sv.AddStructField("PageSize", pageSizeParam)
 	sv.AddStructField("SortAscending", sortAscendingParam)
 	sv.AddStructField("SortBy", sortByParam)
+	sv.AddStructField("TransportZonePath", transportZonePathParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
 		var emptyOutput nsx_policyModel.PolicyEdgeTransportNodeListResult

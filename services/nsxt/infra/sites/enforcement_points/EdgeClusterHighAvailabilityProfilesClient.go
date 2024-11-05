@@ -54,6 +54,7 @@ type EdgeClusterHighAvailabilityProfilesClient interface {
 	// @param enforcementpointIdParam (required)
 	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)
 	// @param includeMarkForDeleteObjectsParam Include objects that are marked for deletion in results (optional, default to false)
+	// @param includeSystemOwnedParam Whether the list result contains system resources (optional, default to true)
 	// @param includedFieldsParam Comma separated list of fields that should be included in query result (optional)
 	// @param pageSizeParam Maximum number of results to return in this page (server may return fewer) (optional, default to 1000)
 	// @param sortAscendingParam (optional)
@@ -65,7 +66,7 @@ type EdgeClusterHighAvailabilityProfilesClient interface {
 	// @throws ServiceUnavailable  Service Unavailable
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
-	List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.EdgeClusterHighAvailabilityProfileListResult, error)
+	List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includeSystemOwnedParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.EdgeClusterHighAvailabilityProfileListResult, error)
 
 	// Creates a new edge cluster high availability profile.
 	//
@@ -188,7 +189,7 @@ func (eIface *edgeClusterHighAvailabilityProfilesClient) Get(siteIdParam string,
 	}
 }
 
-func (eIface *edgeClusterHighAvailabilityProfilesClient) List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.EdgeClusterHighAvailabilityProfileListResult, error) {
+func (eIface *edgeClusterHighAvailabilityProfilesClient) List(siteIdParam string, enforcementpointIdParam string, cursorParam *string, includeMarkForDeleteObjectsParam *bool, includeSystemOwnedParam *bool, includedFieldsParam *string, pageSizeParam *int64, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.EdgeClusterHighAvailabilityProfileListResult, error) {
 	typeConverter := eIface.connector.TypeConverter()
 	executionContext := eIface.connector.NewExecutionContext()
 	operationRestMetaData := edgeClusterHighAvailabilityProfilesListRestMetadata()
@@ -200,6 +201,7 @@ func (eIface *edgeClusterHighAvailabilityProfilesClient) List(siteIdParam string
 	sv.AddStructField("EnforcementpointId", enforcementpointIdParam)
 	sv.AddStructField("Cursor", cursorParam)
 	sv.AddStructField("IncludeMarkForDeleteObjects", includeMarkForDeleteObjectsParam)
+	sv.AddStructField("IncludeSystemOwned", includeSystemOwnedParam)
 	sv.AddStructField("IncludedFields", includedFieldsParam)
 	sv.AddStructField("PageSize", pageSizeParam)
 	sv.AddStructField("SortAscending", sortAscendingParam)

@@ -26,6 +26,19 @@ type StatisticsClient interface {
 	// @param orgIdParam (required)
 	// @param projectIdParam (required)
 	// @param transitGatewayIdParam (required)
+	// @param componentTypeParam Define the DR routes. (optional)
+	// @param cursorParam Opaque cursor to be used for getting next page of records (supplied by current result page) (optional)
+	// @param edgeIdParam UUID of edge node (optional)
+	// @param edgePathParam Policy path of edge node (optional)
+	// @param enforcementPointPathParam Enforcement point path (optional)
+	// @param hostIdParam UUID of host node (optional)
+	// @param hostPathParam Policy path of host node (optional)
+	// @param includedFieldsParam Comma separated list of fields that should be included in query result (optional)
+	// @param networkPrefixParam IPAddress or CIDR Block (optional)
+	// @param pageSizeParam Maximum number of results to return in this page (server may return fewer) (optional, default to 1000)
+	// @param routeSourceParam Filter routes based on the source from which route is learned (optional)
+	// @param sortAscendingParam (optional)
+	// @param sortByParam Field by which records are sorted (optional)
 	// @return com.vmware.nsx_policy.model.TransitGatewayStatistics
 	//
 	// @throws InvalidRequest  Bad Request, Precondition Failed
@@ -33,7 +46,7 @@ type StatisticsClient interface {
 	// @throws ServiceUnavailable  Service Unavailable
 	// @throws InternalServerError  Internal Server Error
 	// @throws NotFound  Not Found
-	Get(orgIdParam string, projectIdParam string, transitGatewayIdParam string) (nsx_policyModel.TransitGatewayStatistics, error)
+	Get(orgIdParam string, projectIdParam string, transitGatewayIdParam string, componentTypeParam *string, cursorParam *string, edgeIdParam *string, edgePathParam *string, enforcementPointPathParam *string, hostIdParam *string, hostPathParam *string, includedFieldsParam *string, networkPrefixParam *string, pageSizeParam *int64, routeSourceParam *string, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.TransitGatewayStatistics, error)
 }
 
 type statisticsClient struct {
@@ -61,7 +74,7 @@ func (sIface *statisticsClient) GetErrorBindingType(errorName string) vapiBindin
 	return vapiStdErrors_.ERROR_BINDINGS_MAP[errorName]
 }
 
-func (sIface *statisticsClient) Get(orgIdParam string, projectIdParam string, transitGatewayIdParam string) (nsx_policyModel.TransitGatewayStatistics, error) {
+func (sIface *statisticsClient) Get(orgIdParam string, projectIdParam string, transitGatewayIdParam string, componentTypeParam *string, cursorParam *string, edgeIdParam *string, edgePathParam *string, enforcementPointPathParam *string, hostIdParam *string, hostPathParam *string, includedFieldsParam *string, networkPrefixParam *string, pageSizeParam *int64, routeSourceParam *string, sortAscendingParam *bool, sortByParam *string) (nsx_policyModel.TransitGatewayStatistics, error) {
 	typeConverter := sIface.connector.TypeConverter()
 	executionContext := sIface.connector.NewExecutionContext()
 	operationRestMetaData := statisticsGetRestMetadata()
@@ -72,6 +85,19 @@ func (sIface *statisticsClient) Get(orgIdParam string, projectIdParam string, tr
 	sv.AddStructField("OrgId", orgIdParam)
 	sv.AddStructField("ProjectId", projectIdParam)
 	sv.AddStructField("TransitGatewayId", transitGatewayIdParam)
+	sv.AddStructField("ComponentType", componentTypeParam)
+	sv.AddStructField("Cursor", cursorParam)
+	sv.AddStructField("EdgeId", edgeIdParam)
+	sv.AddStructField("EdgePath", edgePathParam)
+	sv.AddStructField("EnforcementPointPath", enforcementPointPathParam)
+	sv.AddStructField("HostId", hostIdParam)
+	sv.AddStructField("HostPath", hostPathParam)
+	sv.AddStructField("IncludedFields", includedFieldsParam)
+	sv.AddStructField("NetworkPrefix", networkPrefixParam)
+	sv.AddStructField("PageSize", pageSizeParam)
+	sv.AddStructField("RouteSource", routeSourceParam)
+	sv.AddStructField("SortAscending", sortAscendingParam)
+	sv.AddStructField("SortBy", sortByParam)
 	inputDataValue, inputError := sv.GetStructValue()
 	if inputError != nil {
 		var emptyOutput nsx_policyModel.TransitGatewayStatistics
